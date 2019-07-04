@@ -1,0 +1,62 @@
+
+initialize strings
+------------------
+{
+	char p[] = "trizeu .com";
+	char q[50] = "trizeus";
+	char r[] = {'a', 'b', 'c', 'd', '\0'};
+	char s[5] = {'a', 'b', 'c', 'd', '\0'};
+}
+
+Accessing string via Pointer
+----------------------------
+{
+	char k[6] ="trizeus";
+	char *p = k;
+
+	while(*p != '\0')
+	{
+		printf("%c",*p);
+		p++;
+	}
+}
+
+Arrays
+------
+{
+	char names[4][12] = {
+  							"aaaaaaaa",
+  							"bbbbbbbb",
+  							"cccccccc",
+  							"dddddddd"
+						};
+
+		or
+
+char *names[4] = {
+  							"aaaaaaaa",
+  							"bbbbbbbb",
+  							"cccccccc",
+  							"dddddddd"
+						};
+
+
+		display array
+		-------------
+		{
+				  int r, c;
+  
+  				  for (r = 0; r < 4; r++) 
+  				  {
+    				c = 0;
+    				while(*(names[r] + c) != '\0') 
+    				{
+      					printf("%c", *(names[r] + c));
+      					c++;
+    				}
+    				printf("\n");
+
+    			}
+    	}
+
+}
