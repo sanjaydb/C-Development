@@ -1,1 +1,4 @@
- 
+Creating sudo User
+
+usermod -a -G sudo sanjay
+
