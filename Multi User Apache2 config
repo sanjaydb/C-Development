@@ -27,6 +27,37 @@
   848  history
 
 
+       sudo a2enmod userdir
+
+ 1968  vi /etc/apache2/sites-enabled/000-default.conf 
+ 1969  a2enmod cgi
+ 1970  /etc/init.d/apache2 restart
+
+
+
+ sudo nano /etc/apache2/mods-enabled/userdir.conf
+ {
+ <IfModule mod_userdir.c>
+     UserDir Sites
+     UserDir disabled root
+     UserDir enabled alok
+    <Directory /home/*/Sites>
+    DirectoryIndex index.php index index.html default.html default.htm
+    AllowOverride FileInfo AuthConfig Limit Indexes
+    Options MultiViews Indexes SymLinksIfOwnerMatch IncludesNoExec
+    <Limit GET POST OPTIONS>
+    Require all granted
+    </Limit>
+ <LimitExcept GET POST OPTIONS>
+    Require all denied
+ </LimitExcept>
+ </Directory>
+</IfModule>
+ 
+ }
+ 
+ 
+
 sudo nano /etc/apache2/mods-available/php5.conf
 {
 <IfModule mod_php5.c>
