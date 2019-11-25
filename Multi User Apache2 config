@@ -1,0 +1,27 @@
+ 822  su
+  823  cd /var
+  824  cd www
+  825  ls -la
+  826  cd html
+  827  ls -la
+  828  rm index.html
+  829  ls -la
+  830  su
+  831  cd ~
+  832  ls -la
+  833  pwd
+  834  mkdir www
+  835  chmod 755 www -R
+  836  cd www
+  837  vi index.php
+  838  ls -la
+  839  chmod 755 index.php 
+  840  sudo ln -s /etc/apache2/mods-available/userdir.load /etc/apache2/mods-enabled/
+  841  usermod -a -G sudo sanjay 
+  842  su
+  843  sudo ln -s /etc/apache2/mods-available/userdir.load /etc/apache2/mods-enabled/
+  844  sudo ln -s /etc/apache2/mods-available/userdir.conf /etc/apache2/mods-enabled/
+  845  sudo nano /etc/apache2/mods-enabled/userdir.conf
+  846  sudo nano /etc/apache2/mods-available/php5.conf
+  847  sudo /etc/init.d/apache2 restart
+  848  history
