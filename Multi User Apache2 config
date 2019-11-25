@@ -90,3 +90,29 @@ sudo nano /etc/apache2/mods-available/php5.conf
 </IfModule>
 
 }
+
+
+
+Enable CGI for user
+-------------------
+
+sudo nano /etc/apache2/mods-enabled/userdir.conf
+
+{
+<Directory /home/*/public_hrml/cgi-bin/>
+Options ExecCGI
+SetHandler cgi-script
+</Directory>
+
+}
+
+
+gcc -Wall -o a.cgi a.c
+
+#include <stdio.h>
+int main(void) {
+  printf("Content-Type: text/plain;charset=us-ascii\n\n");
+  printf("Hello world\n\n");
+  return 0;
+}
+
