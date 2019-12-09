@@ -8,3 +8,16 @@ int main(void) {
   printf("Hello world\n\n");
   return 0;
 }
+
+
+Common Headers for Cgi
+----------------------
+{
+  Content-length : The length (in bytes) of the output stream. Implies binary data.
+  Content-type : The MIME content type of the output stream.
+  Expires : Date and time when the document is no longer valid and should be reloaded by the browser.
+  Location : Server redirection (cannot be sent as part of a complete header).
+  Pragma : Turns document caching on and off.
+  Status : Status of the request (cannot be sent as part of a complete header).
+ }
+ 
