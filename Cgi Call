@@ -29,5 +29,9 @@ Common Headers for Cgi
           
         printf("Content-type: image/gif\n");
         printf("Content-length: %ld\n\n", filesize );
+        
+        
+        more info : https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
+        
  }
  
