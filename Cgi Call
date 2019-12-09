@@ -22,6 +22,11 @@ Common Headers for Cgi
   
   
   e.g.
+        printf("Content-type: text/html\n");
+        printf("Content-type: text/plain\n");
+        printf("Content-type: image/gif\n");
+        printf("Content-type: image/jpeg\n");
+          
         printf("Content-type: image/gif\n");
         printf("Content-length: %ld\n\n", filesize );
  }
