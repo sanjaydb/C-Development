@@ -19,5 +19,10 @@ Common Headers for Cgi
   Location : Server redirection (cannot be sent as part of a complete header).
   Pragma : Turns document caching on and off.
   Status : Status of the request (cannot be sent as part of a complete header).
+  
+  
+  e.g.
+        printf("Content-type: image/gif\n");
+        printf("Content-length: %ld\n\n", filesize );
  }
  
