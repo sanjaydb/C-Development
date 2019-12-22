@@ -1,0 +1,24 @@
+
+#sudo apt-get install libmysqlclient-dev
+
+#testing Code
+-------------
+{
+#include <my_global.h>
+#include <mysql.h>
+
+int main(int argc, char **argv)
+{
+  printf("MySQLversion: %s\n", mysql_get_client_info());
+
+  exit(0);
+}
+
+}
+
+compile
+-------
+{
+ gcc test.c -o test  `mysql_config --cflags --libs`
+
+}
