@@ -22,3 +22,32 @@ compile
  gcc test.c -o test  `mysql_config --cflags --libs`
 
 }
+
+
+Return query
+------------
+  do {  
+      MYSQL_RES *result = mysql_store_result(con);
+        
+      if (result == NULL) 
+      {
+          error(con);
+      }
+            
+      MYSQL_ROW row = mysql_fetch_row(result);
+      
+      printf("%s\n", row[0]);
+      
+      mysql_free_result(result);
+                 
+      status = mysql_next_result(con); 
+     
+      if (status > 0) {
+          error(con);
+      }
+      
+  } while(status == 0);
+    
+  mysql_close(con);  
+  exit(0);
+}
