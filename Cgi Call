@@ -35,3 +35,60 @@ Common Headers for Cgi
         
  }
  
+ 
+ read stdin
+ ----------
+ {
+ #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <my_global.h>
+#include <mysql.h>
+
+
+void finish_with_error(MYSQL *con)
+{
+  fprintf(stderr, "%s\n", mysql_error(con));
+  mysql_close(con);
+  exit(1);
+}
+
+int main()
+{
+	
+	char *termtype ;
+	char buffer[50];
+	int i,val;
+	i=0;
+
+
+	printf("Content-Type: text/html\n\n");
+	printf("<html>\n");
+	printf("<head>\n");
+
+	termtype = getenv("TERM");
+	/*if(termtype != NULL)
+		//printf("your terminal type is \"%s\"\n", termtype);
+	else	//printf("no terminal type defined\n");
+	*/
+
+
+	//while (fgets(i, sizeof i, stdin))
+	//{
+	//	printf("ten: %s\n", i);
+	//}
+	
+  //fscanf(stdin, "%d", &val);
+  
+	fgets(buffer,40,stdin);
+	sprintf(buffer, "%s",buffer); 
+	printf("%s\n", buffer);
+
+return 0;
+
+}
+
+output = xid=sanjayfsfsdfagggggggggggggggggggggs
+
+ }
+ 
