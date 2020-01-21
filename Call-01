@@ -29,7 +29,7 @@ If(type)
 		printf(“This was a POST request. \n”);
 
 	}
-else if(strcmp(type,”GET”) == 0;
+	else if(strcmp(type,”GET”) == 0;
 	{
 		printf(“This was a GET request. \n”);
 	}
@@ -39,14 +39,14 @@ else if(strcmp(type,”GET”) == 0;
 
 <html>
 <head>
-<title> CGI How -To, ReadG_pl Test Form </title>
+<title> CGI Test Form </title>
 </head>
 <body>
 
 <p> <H1> Comments </h1></p>
 <p><H3>
 
-Please fill in the following comment form. Thank you in advance for your time.
+Please fill The Form.
 </H3></p>
 <p><HR></p>
 
@@ -80,7 +80,7 @@ Excellent: <INPUT TYPE = “radio” NAME = “rating” VALUE = “EX”>
 </body>
 </HTML>
 
-/* Follow up page for readget.pl test script
+/* Follow up page for r.pl test script
 
 #!/usr/local/bin/perl
 
@@ -97,15 +97,12 @@ return 1;
 
 $requestType = $ENV(“Request_Method”);
 
-#Print the header for all CGI scripts that output dynamic text data
 print ”Content-type: text/plain\n\n;
 
 #make sure that this is a post request
 
 if($requestType eq “GET”)
 {
-# call our function to read the data from stdin
-# Notice that we use the variable name,not its value as an argument
 
 &readGetData(*data);
 
