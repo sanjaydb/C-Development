@@ -39,6 +39,11 @@ Compiling
   ----------------------------------------------
   {
     $ gcc -c -Wall -Werror -fpic san.c
+    
+    or
+    
+    $ gcc -shared -Wl,-San,libsan.so -o libsan.so *.o
+    
   }
 
   Creating Shared Library Files
@@ -71,12 +76,19 @@ Compiling
       libsan.so => /usr/lib/libsan.so (0xC0DCAFE00)
     $./hello
    }
-   
-
-    
-
   }
   
 
+To view functions in a LIB
+--------------------------
+{
+  #nm libsan.so  
+}
+
+To list the dependencies of a LIB
+---------------------------------
+{
+  #ldd libsan.so
+}
 
 }
