@@ -91,4 +91,17 @@ To list the dependencies of a LIB
   #ldd libsan.so
 }
 
+
+Dynamic 
+-------
+{
+  #vi santool.c
+  #gcc -shared -fPIC -o libsantool.so santool.c
+  #gcc main.c -L /home/san/coding/ -llibsantool -o main
+  #export LD_LIBRARY_PATH=/home/san/coding/:$LD_LIBRARY_PATH
+
+}
+
+
+
 }
