@@ -102,6 +102,17 @@ Dynamic
 
 }
 
+}
+
+
+RnD
+---
+{
+
+    #gcc -shared -fPIC -Wl,-soname,libsantool.so -o libsantool.so santool.c
+    #gcc s.c -L/home/sanjay/QT/Valmon/libsan -lsantool  -o sample
+    #./sample -> works
+
 
 
 }
