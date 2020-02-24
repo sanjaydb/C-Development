@@ -22,5 +22,21 @@ void readGetData(char **aString)
   }
 }
 
+void main(int argc, char *argv[])
+{
+  char *requestType;
+  char *data = (char *) 0;
+  
+  printf("Content-type: text/plain\n\n");
+  
+  requestType = getenv("REQUEST_METHOD");
+  
+  if(requestType && !strcmp(requestType,"GET"))
+  {
+    readGetData(&data);
+    printf("The Get Data is : \n\n");
+  }
+  exit(0);
+}
 
     
