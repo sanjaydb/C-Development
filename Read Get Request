@@ -1,0 +1,26 @@
+#include <stdlib.h>
+#include <stdio.h>
+
+void readGetData(char **aString)
+{
+  char *queryString;
+  int len = 0;
+  
+  queryString = getenv("QUERY_STRING");
+  
+  if(queryString)
+  {
+    len = strlen(queryString);
+    *aString = malloc(sizeof(char) * len);
+    strcpy(*aString,queryString);
+  }
+  else
+  {
+   len = 1;
+   *aString = malloc(sizeof(char) * len);
+   **aString = '\0';
+  }
+}
+
+
+    
