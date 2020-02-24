@@ -39,4 +39,8 @@ void main(int argc, char *argv[])
   exit(0);
 }
 
+
+<form method="POST" Action="a.cgi">
+</form>
+
     
