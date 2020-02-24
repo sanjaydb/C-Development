@@ -1,0 +1,31 @@
+
+char *myEnvPtr ;
+myEnvPtr = (char *)0;
+myEnvPtr = getenv("POST");
+
+if(myEnvPtr)
+{
+  printf("\%s",myEnvPtr);
+}
+
+
+
+extern char **environ ;
+
+char *getenv(const char *envName)
+{
+  const char *tmp;
+  size_t length;
+  
+  length = strlen(enName);
+  
+  for( tmp = *environ ; '\0' != *tmp ; tmp += strlen(tmp)+1)
+  {
+    if (!(strncmp(tmp, envName, length)) &&  ( '=' == tmp[length] ))
+    {
+      return( (char *) & ( tmp[length +1 ]) );
+    }
+  }
+  
+  return ( (char*) 0 );
+}
