@@ -1,3 +1,13 @@
+Address in Process
+------------------
+{
+  .In most of the cases , Addresses are  [always virtual addresses]
+  .The debugger interprets virtual addresses according to the [page director][ of the current process
+  .In kernel mode, the debugger interprets virtual addresses according to the [page directory[ of the process 
+   that the [process context specifies]
+}
+
+
 ! heap = To Display Current process heap:
 Searching String in a process.
 > Imf m notepad
