@@ -1,0 +1,7 @@
+! heap = To Display Current process heap:
+Searching String in a process.
+> Imf m notepad
+> S -sa Addresss [ OXAAKAx] " hello"
+
+Searching Unicode
+S - u 0 L?800000001/2 " Hello"
