@@ -45,6 +45,23 @@ k -> after break  break ->to see the stack trace.
 k
 qd -> to quit
 
-
+--------------
+Contents command on the Help menu
+.sympath (Set Symbol Path)
+.reload (Reload Module)
+x (Examine Symbols)
+g (Go)
+Break command on the Debug menu
+lm (List Loaded Modules)
+k (Display Stack Backtrace)
+bu (Set Breakpoint)
+bl (Breakpoint List)
+~ (Thread Status)
+~s (Set Current Thread)
+.sympath+ (Set Symbol Path) append to existing symbol path
+.srcpath (Set Source Path)
+Step Into command on the Debug menu (F11)
+!analyze -v
+qd (Quit and Detach)
 
 
