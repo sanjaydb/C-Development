@@ -15,3 +15,36 @@ Searching String in a process.
 
 Searching Unicode
 S - u 0 L?800000001/2 " Hello"
+
+
+cl /Zi b.c
+
+e.g-01
+------
+.reload
+.sympath srv*
+x b.exe
+x b!* 
+b!_main  / b!main
+x b!*main*
+
+u a96710 -> main 
+.open -a a96710 -> source code 
+~
+
+bu b!main
+bl
+g
+lm -> To see a list of code modules that are loaded 
+k -> To see a stack trace
+bu ntdll!ZwWriteFile -> To set and verify a breakpoint at ZwWriteFile
+bl
+k -> after break  break ->to see the stack trace.
+~ -> To see a list of all threads
+~0s -> To look at the stack trace for thread 0
+k
+qd -> to quit
+
+
+
+
