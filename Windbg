@@ -8,6 +8,22 @@ Address in Process
 }
 
 
+eg
+--
+{
+  cl /nologo p1.cpp /link /release
+  fc /b p1.exe p2.exe
+  c:\>C:\Program Files (x86)\Vim\vim82\>>xxd -s +0x3c -l 1 p1.exe
+  000003c: d8 
+  
+  loading both exes in windbg
+  ---------------------------
+  {
+    #xxd -r -p mykey.hex > mykey.bin  -> on linux convert hex to binary
+    cdb -c ".reload /f ; q" p1.exe 
+  
+}
+ 
 ! heap = To Display Current process heap:
 Searching String in a process.
 > Imf m notepad
