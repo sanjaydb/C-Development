@@ -37,6 +37,10 @@ cl /Zi b.c
 
 e.g-01
 ------
+
+0:000> !dh p1.exe  -> to list dumpbin like header
+
+
 .reload
 .sympath srv*
 x b.exe
