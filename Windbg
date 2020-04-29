@@ -1,3 +1,25 @@
+
+Load File
+---------
+
+.sympath srv*c:\Symbols*https://msdl.microsoft.com/download/symbols
+.load C:\Program Files\dotnet\shared\Microsoft.NETCore.App\1.0.0\sos.dll .
+.reload
+
+
+The !uniqstack command can help in these situations. It enumerates all the thread call stacks and eliminates duplicates, 
+so that you can understand at a glance what these hundreds of threads are doing.
+!uniqstack or ~* ekn
+
+!findstack command. This command searches thread call stacks for a specific symbol and displays matching threads.
+!findstack kernelbase!WaitForSingleObject 
+
+display 4 byte  dd 028b5c30 L8
+003cf8d8          
+ dc 028b5c60 L8
+ poi(028b5c30+8)
+ 
+
 Address in Process
 ------------------
 {
