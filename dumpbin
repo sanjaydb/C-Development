@@ -16,6 +16,7 @@ dumpbin /rawdata:bytes /section:.data p1.exe
 dumpbin /symbols p1.exe -> COFF image should be compiled with /debug 
 dumpbin /tls p1.exe -> IMAGE_TLS_DIRECTORY if threads are implemented.
 
+
 cl
 --
 /FA Assembly code; .asm
