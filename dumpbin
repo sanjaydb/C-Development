@@ -25,5 +25,6 @@ cl
 /FAcs Machine, source, and assembly code; .cod
 
 
-
+Exe Headers
+https://docs.microsoft.com/en-us/windows/win32/debug/pe-format?redirectedfrom=MSDN#file-headers
 
