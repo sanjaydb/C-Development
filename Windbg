@@ -137,3 +137,71 @@ Step Into command on the Debug menu (F11)
 qd (Quit and Detach)
 
 
+
+
+"C:\Program Files (x86)\Windows Kits\10\Debuggers\x64"\windbg.exe -c getsid.exe
+C:\Program Files (x86)\Windows Kits\10\Debuggers\x86\windbg.exe
+
+srv*c:\dbgSymbols*https://msdl.microsoft.com/download/symbols
+
+DevOpsRnd sanjay
+
+
+lmDm
+!sym noisy
+.reload /f --> Read load all Symboyls
+
+lmDvmGetSid!* 
+lmDvmGetSid
+
+bp $exentry
+bu @$exentry
+
+s -a 0x0 L?0x7FFFFFFF Enter
+da 00c0d384  
+x GetSid!*
+ba r1 00c0d384
+
+
+new
+---
+lm
+!sym noisy
+.reload /f
+!analyze -v
+k
+lmDeti
+lmDvmGetSid
+x /D /f GetSid!a*
+ x /D /f GetSid!*main*
+u 657880    --> see the code 
+bl 
+bu $exentry
+bl
+u 
+bu wmain
+u
+k 
+dv /t/v
+du 012ff8c0  --> Display string full
+
+dx -r1 ((GetSid!wchar_t * *)0x1226098)  --> Argv
+
+bp cmp
+
+da 012ff880          ----> Display String at address
+k
+dv/t/v
+	check cmp OD 
+du 00657921
+
+
+
+00657907 e82bc4ffff      call    GetSid!ILT+11570(__getch) (00653d37)
+0065790c 8b8d54ffffff    mov     ecx,dword ptr [ebp-0ACh]
+00657912 88440d98        mov     byte ptr [ebp+ecx-68h],al
+00657916 8b9554ffffff    mov     edx,dword ptr [ebp-0ACh] ss:002b:00affa38=00000003
+0065791c 0fbe441598      movsx   eax,byte ptr [ebp+edx-68h]
+00657921 83f80d          cmp     eax,0Dh
+00657924 740d            je      GetSid!wmain+0xb3 (00657933)
+
