@@ -1,0 +1,5 @@
+Windef.h : Basic type defination
+winnt.h type defination for unicode support
+winbase.h kernal functions
+winuser.h user interface functions
+wingdi.h graphics device interface functions
