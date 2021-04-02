@@ -1,0 +1,13 @@
+Type-safe callbacks
+Many-to-many relationship
+Implemented in QObject
+Slots are automatically disconnected when the receiver is deleted.
+Only connect the signals you need, while in a listener you need to implement also the methods you won't use.
+You can directly connect signals to slots, without having to implement a listener method calling another method
+When implementing your own signals/slots, there is no need to do the listener management yourself as this is done by the qt object system
+
+
+
+Ref:
+Please see reference Page :
+
