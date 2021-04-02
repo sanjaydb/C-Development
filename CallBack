@@ -1,0 +1,18 @@
+#include<stdio.h>
+  
+void san()
+{
+    printf("I am function san\n");
+}
+  
+void funCall(void (*ptr)())
+{
+    (*ptr) (); 
+}
+  
+int main()
+{
+    void (*ptr)() = &san;
+    funCall(ptr);
+   return 0;
+}
