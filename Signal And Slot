@@ -6,8 +6,23 @@ Only connect the signals you need, while in a listener you need to implement als
 You can directly connect signals to slots, without having to implement a listener method calling another method
 When implementing your own signals/slots, there is no need to do the listener management yourself as this is done by the qt object system
 
+Signal
+A signal is a way to inform a possible observer that something happened.
+  A QPushButton is clicked.
+  An asynchronous service handler is finished.
+  Signal is sent, or emitted, using the keyword "emit".
+  
+Slot
+A slot is a function that is to be executed when a signal has been emitted.
+
+Connecting Signals and Slots
+To setup the signal-slot connection, we must first determine the connection.
+Syntax: connect(sender, SIGNAL(signal), receiver, SLOT(slot)));
+
+
 
 
 Ref:
-Please see reference Page :
+sanjaydb/hacking/Reference
+
 
