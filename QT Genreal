@@ -42,10 +42,47 @@ mainwindow.cpp
       menu->addAction(a2);
       menu->addAction(a3);
       ui->pushbuttona->setMenu(menu);
-      
-      
+           
   }
   
+  
+  layouts
+  -------
+  {
+        #include <QHBoxLayout>
+        #include <QVBoxLayout>
+        #include <QPushButton>
+        
+        Qwidget *widget = new Qwidget;
+        
+        QPushButton *a1 = new QPushButton("New");
+        QPushButton *a2 = new QPushButton("Open");
+        QPushButton *a3 = new QPushButton("Close");
+         QHBoxLayout *hL = new QHBoxLayout;
+         hL->addWidget(a1);
+         hL->addWidget(a2);
+         hL->addWidget(a3);
+         
+        QPushButton *b1 = new QPushButton("Save");
+        QPushButton *b2 = new QPushButton("Project");
+        QPushButton *b3 = new QPushButton("Exit");
+          QVBoxLayout *vL = new QVBoxLayout;
+          vL->addWidget(b1);
+          vL->addWidget(b2);
+          vL->addWidget(b3);
+         
+         QVBoxLayout *MainLayout = new QVBoxLayout;
+          MainLayout->addLayout(hL);
+          MainLayout->addLayout(vL);
+          
+          widget->setLayout(MainLayout);
+          widget->show();
+          setCenteralWidget(widget);
+          
+      
+ 
+  
+  }
   
   
 }
