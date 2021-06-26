@@ -47,6 +47,14 @@ Process
   
 }
 
+Firewall
+--------
+{
+  #Get-NetFirewallAddressFilter
+  #Get-NetFirewallApplicationFilter
+  #Get-NetFirewallProfile
+
+}
 
 Network
 -------
