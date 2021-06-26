@@ -32,7 +32,20 @@ File CReation
   #Get-Content SAN\tst.txt).length
   #Test-Path SANtst
 
-  
+  #Get-Date
+  #set-date -Date (Get-Date).AddDays(1)
+
+  #Get-Date -DisplayHint Date
+  #Get-Date -DisplayHint Time	
+  #get-date -displayHint time
+
+  #Add-Content san.txt 'World!'
+  #Clear-Content san.txt
+
+  #New-Item D:\temp\test\test.html -ItemType File
+  #get-history
+  #get-content sna.txt | measure-object -character -line -word
+
   
 }
 
@@ -42,7 +55,7 @@ OS
  #Get-HotFix
  
 
-
+}
 
 
 Execution Policy
