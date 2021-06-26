@@ -1,0 +1,85 @@
+#ls /path/lib
+#cat /path/lib
+#clear
+#Get-Help -Name cls
+
+Execution Policy
+----------------
+{
+  #Get-ExecutionPolicy 
+  #Set-ExecutionPolicy Unrestricted
+}
+
+Services
+--------
+{
+  #Get-Services A*
+  #Get-Services | Select-Object Name Status
+}
+
+
+
+Eventlog
+--------
+{
+  #Get-EventLog - Log "Application"
+}
+
+
+
+Process
+-------
+{
+  #Get-Process SQL*
+  #Get-Help Get-Process -examples
+  #Stop-Process -Name notepad
+  #Stop-Process -ID 369
+  #Get-Process -Name chrome |Format-List -Property *
+  #Get-Service -Name win* | Format-Table
+  #Get-Service -Name win* | Format-Table -AutoSize
+  
+}
+
+
+Network
+-------
+{
+  #Test-NetConnection -ComputerName "localhost"
+  #Test-NetConnection google.com
+  #Test-NetConnection 72.72.72.72
+  #Test-NetConnection "trizeus.com" -Port 443
+  #Test-NetConnection trizeus.com -traceroute
+  #Get-NetIPAddress
+  #Get-NetIPConfiguration
+  #Resolve-DnsName -Name trizeus.com
+  #Get-NetTCPConnection
+  #Get-DnsClient
+  #Set-DnsClientServer Address
+  #Clear-DnsClientCach
+  #Invoke-Command -ComputerName -ScriptBlock {ipconfig /release}
+  #Invoke-Command -ComputerName -ScriptBlock {ipconfig /renew}
+  #Disable-NetAdapter -Name "Adapter Name"
+  #Enable-NetAdapter -Name "Adapter Name"
+  #Get-DnsClient | finstr -i ip
+  #getmac
+  #Get-NetAdapter | findstr -i npcap
+  #ipconfig /all
+  #Get-Service | findstr -i Running
+ }
+ 
+ 
+ wmic
+ ----
+ {
+  >startup
+  >bios
+  >cpu
+  >baseboard
+  
+ 
+ 
+ }
+ 
+ 
+ 
+ 
