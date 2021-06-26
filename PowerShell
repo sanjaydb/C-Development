@@ -3,6 +3,48 @@
 #clear
 #Get-Help -Name cls
 
+
+File CReation
+---------------
+{
+  #New-Item san.txt
+  #Set-Content san.txt 'Hello World'
+  #get-Content san.txt
+  
+  #New-Item -Path c:/San -ItemType Directory
+  #New-Item -Path 'san.txt' -ItemType File
+  
+  #Copy-Item 'SanFolder' 'SanFolder1'
+  #Copy-Item 'SanFolder' -Destination 'SanFolder1'
+  #Copy-Item 'SanFile.txt' 'SanFile1.txt'
+  #Copy-Item -Filter *.txt -Path 'SanFolder' -Recurse -Destination 'SanFolder1'
+  
+  #Remove-Item 'SanFolder1'
+  #Remove-Item 'SanFolder1' -Recurse
+  
+  #Move-Item SanTst SanTst1
+  #Move-Item SanTst SanTst1
+  #Move-Item SAN\Tst.txt SAN\Tst1
+
+  #Rename-Item SAN\tst.txt tst1.txt
+  #Get-Content SAN\tst.txt
+
+  #Get-Content SAN\tst.txt).length
+  #Test-Path SANtst
+
+  
+  
+}
+
+OS
+--
+{
+ #Get-HotFix
+ 
+
+
+
+
 Execution Policy
 ----------------
 {
