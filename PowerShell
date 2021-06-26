@@ -25,6 +25,13 @@ Eventlog
   #Get-EventLog - Log "Application"
 }
 
+Software List
+-------------
+{
+ #Get-WmiObject -Class Win32_Product
+#Get-WmiObject -Class Win32_Product |select Name, version 
+
+}
 
 
 Process
