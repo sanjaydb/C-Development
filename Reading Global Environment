@@ -1,0 +1,65 @@
+
+calling function
+----------------
+{
+  char *myEnvPtr ;
+  myEnvPtr = (char *)0;
+  myEnvPtr = getenv("POST");
+
+  if(myEnvPtr)
+  {
+    printf("\%s",myEnvPtr);
+  }
+}
+
+
+define function
+---------------
+{
+  extern char **environ ;
+
+  char *getenv(const char *envName)
+  {
+    const char *tmp;
+    size_t length;
+
+    length = strlen(enName);
+
+    for( tmp = *environ ; '\0' != *tmp ; tmp += strlen(tmp)+1)
+    {
+      if (!(strncmp(tmp, envName, length)) &&  ( '=' == tmp[length] ))
+      {
+        return( (char *) & ( tmp[length +1 ]) );
+      }
+    }
+
+    return ( (char*) 0 );
+  }
+}
+
+
+
+
+calling function 2
+------------------
+{
+  const char *type = (char *) 0;
+  type = getenv("REQUEST_METHOD");
+
+  if(type)
+  {
+    if(strcmp(type,"POST") == 0)
+    {
+      printf("\n Thi was a POSt request.\n");
+    }
+    else
+    {
+      printf("This is a GET Request.\n");
+    }
+  }
+}
+
+
+
+
+

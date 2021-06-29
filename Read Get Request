@@ -1,0 +1,46 @@
+#include <stdlib.h>
+#include <stdio.h>
+
+void readGetData(char **aString)
+{
+  char *queryString;
+  int len = 0;
+  
+  queryString = getenv("QUERY_STRING");
+  
+  if(queryString)
+  {
+    len = strlen(queryString);
+    *aString = malloc(sizeof(char) * len);
+    strcpy(*aString,queryString);
+  }
+  else
+  {
+   len = 1;
+   *aString = malloc(sizeof(char) * len);
+   **aString = '\0';
+  }
+}
+
+void main(int argc, char *argv[])
+{
+  char *requestType;
+  char *data = (char *) 0;
+  
+  printf("Content-type: text/plain\n\n");
+  
+  requestType = getenv("REQUEST_METHOD");
+  
+  if(requestType && !strcmp(requestType,"GET"))
+  {
+    readGetData(&data);
+    printf("The Get Data is : \n\n");
+  }
+  exit(0);
+}
+
+
+<form method="POST" Action="a.cgi">
+</form>
+
+    

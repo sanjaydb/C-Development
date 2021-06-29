@@ -1,0 +1,30 @@
+c:\> dumpbin /all /rawdata:none b.exe
+dumpbin /disasm b.exe
+dumpbin /dependents p1.exe
+dumpbin /dependents /importes p1.exe
+dumpbin /directives a.exe  ->  display .drective section of an image
+dumpbin /disasm:nobytes a.exe
+dumpbin /exports /p.exe
+dumpbin /fpo b.exe -> frame pointer optimization (FPO) record -> corecting stackpointer manually
+dumpbin /headers a.exe
+dumpbin /IMPORTS:msvcrt.dll
+dumpbin /linenumbers a.exe -> shuld be compiled with /Zi || /Zd || Z7 || /debug
+dumpbin /disasm /range:4219334,0x004061CD p1.exe -> dipslay code 
+dumpbin /rawdata:8 p1.exed  -> 2,4,8 byte value or bytes 
+dumpbin /relocations p1.exe
+dumpbin /rawdata:bytes /section:.data p1.exe
+dumpbin /symbols p1.exe -> COFF image should be compiled with /debug 
+dumpbin /tls p1.exe -> IMAGE_TLS_DIRECTORY if threads are implemented.
+
+
+cl
+--
+/FA Assembly code; .asm
+/FAc Machine and assembly code; .cod
+/FAs Source and assembly code; .asm
+/FAcs Machine, source, and assembly code; .cod
+
+
+Exe Headers
+https://docs.microsoft.com/en-us/windows/win32/debug/pe-format?redirectedfrom=MSDN#file-headers
+

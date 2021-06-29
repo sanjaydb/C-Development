@@ -1,0 +1,207 @@
+
+Load File
+---------
+
+.sympath srv*c:\Symbols*https://msdl.microsoft.com/download/symbols
+.load C:\Program Files\dotnet\shared\Microsoft.NETCore.App\1.0.0\sos.dll .
+.reload
+
+
+The !uniqstack command can help in these situations. It enumerates all the thread call stacks and eliminates duplicates, 
+so that you can understand at a glance what these hundreds of threads are doing.
+!uniqstack or ~* ekn
+
+!findstack command. This command searches thread call stacks for a specific symbol and displays matching threads.
+!findstack kernelbase!WaitForSingleObject 
+
+display 4 byte  dd 028b5c30 L8
+003cf8d8          
+ dc 028b5c60 L8
+ poi(028b5c30+8)
+ 
+
+Address in Process
+------------------
+{
+  .In most of the cases , Addresses are  [always virtual addresses]
+  .The debugger interprets virtual addresses according to the [page director][ of the current process
+  .In kernel mode, the debugger interprets virtual addresses according to the [page directory[ of the process 
+   that the [process context specifies]
+}
+
+
+eg
+--
+{
+  cl /nologo p1.cpp /link /release
+  fc /b p1.exe p2.exe
+  c:\>C:\Program Files (x86)\Vim\vim82\>>xxd -s +0x3c -l 1 p1.exe
+  000003c: d8 
+  
+  loading both exes in windbg
+  ---------------------------
+  {
+    #xxd -r -p mykey.hex > mykey.bin  -> on linux convert hex to binary
+    cdb -c ".reload /f ; q" p1.exe 
+  
+}
+ 
+! heap = To Display Current process heap:
+Searching String in a process.
+> Imf m notepad
+> S -sa Addresss [ OXAAKAx] " hello"
+
+Searching Unicode
+S - u 0 L?800000001/2 " Hello"
+
+
+cl /Zi b.c
+
+e.g-01
+------
+
+0:000> !dh p1.exe  -> to list dumpbin like header
+ 
+ hitting main
+ -------------
+ {
+  bp call kernel32!GetCommandLineXXXX settig a bp on that function brings you closer to the main() 
+  another function you can set a breakpoint is kernel32!GetEnvironemStringXXXX and then set hardware breaks 
+  on the results once you have hit these breakpoints you can you can use the standard prototype of main 
+  int main (int argc , char **argv , char* envp) construct to identify your main
+  
+  to get more nearer you can employ the int argc you execute the binary so you know how many arguments you passed 
+  if you passed no arguments to the binary then int argc will be equal to 1 if you passed 8 arguments int argc will be equal to 9
+  with that in mind once you reached the breakpoint as enumerated above you can run a loop that enumerates the int argc in stack
+
+    bp $exentry
+    bp kernel32!GetCommandLineA
+    g
+    g
+    g poi(@esp)
+    .while(@$t0= 0) {
+    pc 
+    .if ( poi(@esp) == 1) {r $t0 = 1} .else { r $t0 = 0}
+    } 
+    cdb -c "$$>a< findwmain.txt" hell.exe
+ 
+ 
+  bp $exentry  -> break main
+  bp kernel32!GetCommandLineXXXX
+  bp kernel32!GetEnvironemStringXXXX
+  :\>cdb -c "bp $exentry;g;bp kernel32!GetCommandlineA;g;g poi(@esp)" p1.exe
+  }
+ 
+
+.reload
+.sympath srv*
+x b.exe
+x b!* 
+b!_main  / b!main
+x b!*main*
+
+u a96710 -> main 
+.open -a a96710 -> source code 
+~
+
+bu b!main
+bl
+g
+lm -> To see a list of code modules that are loaded 
+k -> To see a stack trace
+bu ntdll!ZwWriteFile -> To set and verify a breakpoint at ZwWriteFile
+bl
+k -> after break  break ->to see the stack trace.
+~ -> To see a list of all threads
+~0s -> To look at the stack trace for thread 0
+k
+qd -> to quit
+
+--------------
+Contents command on the Help menu
+.sympath (Set Symbol Path)
+.reload (Reload Module)
+x (Examine Symbols)
+g (Go)
+Break command on the Debug menu
+lm (List Loaded Modules)
+k (Display Stack Backtrace)
+bu (Set Breakpoint)
+bl (Breakpoint List)
+~ (Thread Status)
+~s (Set Current Thread)
+.sympath+ (Set Symbol Path) append to existing symbol path
+.srcpath (Set Source Path)
+Step Into command on the Debug menu (F11)
+!analyze -v
+qd (Quit and Detach)
+
+
+
+
+"C:\Program Files (x86)\Windows Kits\10\Debuggers\x64"\windbg.exe -c getsid.exe
+C:\Program Files (x86)\Windows Kits\10\Debuggers\x86\windbg.exe
+
+srv*c:\dbgSymbols*https://msdl.microsoft.com/download/symbols
+
+DevOpsRnd sanjay
+
+
+lmDm
+!sym noisy
+.reload /f --> Read load all Symboyls
+
+lmDvmGetSid!* 
+lmDvmGetSid
+
+bp $exentry
+bu @$exentry
+
+s -a 0x0 L?0x7FFFFFFF Enter
+da 00c0d384  
+x GetSid!*
+ba r1 00c0d384
+
+
+new
+---
+lm
+!sym noisy
+.reload /f
+!analyze -v
+k
+lmDeti
+lmDvmGetSid
+x /D /f GetSid!a*
+ x /D /f GetSid!*main*
+u 657880    --> see the code 
+bl 
+bu $exentry
+bl
+u 
+bu wmain
+u
+k 
+dv /t/v
+du 012ff8c0  --> Display string full
+
+dx -r1 ((GetSid!wchar_t * *)0x1226098)  --> Argv
+
+bp cmp
+
+da 012ff880          ----> Display String at address
+k
+dv/t/v
+	check cmp OD 
+du 00657921
+
+
+
+00657907 e82bc4ffff      call    GetSid!ILT+11570(__getch) (00653d37)
+0065790c 8b8d54ffffff    mov     ecx,dword ptr [ebp-0ACh]
+00657912 88440d98        mov     byte ptr [ebp+ecx-68h],al
+00657916 8b9554ffffff    mov     edx,dword ptr [ebp-0ACh] ss:002b:00affa38=00000003
+0065791c 0fbe441598      movsx   eax,byte ptr [ebp+edx-68h]
+00657921 83f80d          cmp     eax,0Dh
+00657924 740d            je      GetSid!wmain+0xb3 (00657933)
+

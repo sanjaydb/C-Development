@@ -1,0 +1,20 @@
+
+alloacting size in memory
+-------------------------
+{
+    #include <stdlib.h>
+    #include <string.h>
+
+    int main()
+    {
+
+      char *cmd;
+      cmd = malloc(26);
+
+      sprintf(cmd,"sanjay.d.bhalerao@gmail.com");
+      printf("\n Name : %s",cmd);
+
+      return 0;
+    }
+
+}

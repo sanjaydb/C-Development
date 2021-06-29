@@ -1,0 +1,61 @@
+#include <stdlib.h>
+#include <stdio.h>
+
+void readPostData(char **aString)
+{
+  char *queryString;
+  int contentLength;
+  
+  char *sizeString;
+  int i;
+  sizeString = getenv("CONTENT_LENGTH");
+  
+  if(sizeString)
+  {
+    contentLength = atoi(sizeString);
+  }
+  else
+  {
+    contentLength = 0;
+  }
+  
+  if (0 != contentLength)
+  {
+    queryString = (char *)0 ;
+  }
+  if ( querString)
+  {
+    i = 0;
+    while ( i < contentLength)
+    {
+      querySTring[i++] = fgetc(stdin);
+    }  
+    queryString[i] = '\0';
+    *aString = queryString ;
+  }
+  else
+  {
+    *aString = malloc(sizeof(char))l
+    **aString = '\0';
+  }
+}
+
+
+void main(int argc, char *argv[])
+{
+  char *requestType;
+  char *data = (char *)0;
+  
+  printf("Content-type: text/plain\n\n");
+  
+  requestType = getenv("REQUEST_METHOD");
+  
+  if(requestType && !strcmp(requestType,"POST"))
+  {
+    readPostData(&data);
+    printf("The Post data is: \\n");
+    if(data != (char *)0) printf("%s\n",data);
+  }
+  exit(0);
+}
+    

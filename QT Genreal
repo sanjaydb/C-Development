@@ -1,0 +1,88 @@
+mainwindow.cpp
+--------------
+{
+  ui->setupUI(this);
+  
+  setWindowTitle("Login Window");
+  
+  ui->lineEditUser->SetPlaceHolderText("User");
+  
+  ui->lineEditUser->setClearButtonEnabled(true);
+  
+  ui->lineEdirPassword->setEchoMode(QLineEdit::Password);
+  
+  QIcon user("/pict/u.png");
+  
+  ui->lineEdituser->addAction(user,QLineEdit::LeadingPosition);
+  
+  Create Slot By Leftclick on Label -> e.g 
+  {
+    void MainWindow::on_lineEditPassword_returnPressed()
+    {
+        qDebug << " Subited data " ;
+  }
+  
+  ui->pushButton->setIcon(QIcon("/a.png"));
+  ui->pushButton->setCheckable(true);
+  
+  
+  Menu : modify push button to menu
+  ----
+  {
+      QAction *a1 = new QAction ;
+      QAction *a2 = new QAction ;
+      QAction *a3 = new QAction ;
+      
+      a1->setText("New");
+      a2->setText("Open");
+      a3->seText("Close");
+      
+      Qmenu *menu = new Qmenu
+      menu->addAction(a1);
+      menu->addAction(a2);
+      menu->addAction(a3);
+      ui->pushbuttona->setMenu(menu);
+           
+  }
+  
+  
+  layouts
+  -------
+  {
+        #include <QHBoxLayout>
+        #include <QVBoxLayout>
+        #include <QPushButton>
+        
+        Qwidget *widget = new Qwidget;
+        
+        QPushButton *a1 = new QPushButton("New");
+        QPushButton *a2 = new QPushButton("Open");
+        QPushButton *a3 = new QPushButton("Close");
+         QHBoxLayout *hL = new QHBoxLayout;
+         hL->addWidget(a1);
+         hL->addWidget(a2);
+         hL->addWidget(a3);
+         
+        QPushButton *b1 = new QPushButton("Save");
+        QPushButton *b2 = new QPushButton("Project");
+        QPushButton *b3 = new QPushButton("Exit");
+          QVBoxLayout *vL = new QVBoxLayout;
+          vL->addWidget(b1);
+          vL->addWidget(b2);
+          vL->addWidget(b3);
+         
+         QVBoxLayout *MainLayout = new QVBoxLayout;
+          MainLayout->addLayout(hL);
+          MainLayout->addLayout(vL);
+          
+          widget->setLayout(MainLayout);
+          widget->show();
+          setCenteralWidget(widget);
+          
+      
+ 
+  
+  }
+  
+  
+}

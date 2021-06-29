@@ -1,0 +1,198 @@
+﻿/* Determine what type of request a form has sent */
+$myEnvVar;
+$myEnvVar = $ENV{“REQUEST_METHOD”};
+
+IF(#$myEnvVar eq “POST”)
+{
+	print “ This was a POST request \n”;
+}
+elsif($myEnvVar eq “GET”)
+{
+	print “ This was a GET request \n”;
+}
+
+
+
+////////////////////
+
+
+In C
+
+const char *type = (char *) 0 ;
+
+type = getenv(“REQUEST_METHOD”);
+
+If(type)
+{
+	if(strcmp(type,”POST”) == 0;
+	{
+		printf(“This was a POST request. \n”);
+
+	}
+	else if(strcmp(type,”GET”) == 0;
+	{
+		printf(“This was a GET request. \n”);
+	}
+}
+
+* create an HTML FORM TO TEST THE SCRIPT *
+
+<html>
+<head>
+<title> CGI Test Form </title>
+</head>
+<body>
+
+<p> <H1> Comments </h1></p>
+<p><H3>
+
+Please fill The Form.
+</H3></p>
+<p><HR></p>
+
+<h4><FORM METHOD=”GET” ACTION=”http:/cgi-bin/reaadget.pl”>
+<p>Name: <INPUT TYPE = “text” NAME = “name” VALUE = “” size = “60”></p>
+<p> Address: <INPUT TYPE = “text” NAME = “street” VALUE = “” size = “57”></p>
+<p> City: <INPUT TYPE = “text” NAME = “city” VALUE = “” size = “35”></p>
+<p>State: <INPUT TYPE = “text” NAME = “State” VALUE = “” size = “2”></p>
+<p>Zip: <INPUT TYPE = “text” NAME = “Zip” VALUE = “” size = “10”></p>
+
+<BR>
+<p>Overall rating</p>
+<p>
+Needs Improvement: <INPUT TYPE = “radio” NAME = “rating” VALUE = “NI” >
+Average: <INPUT TYPE = “radio” NAME = “rating” VALUE = “AV” >
+Above Average: <INPUT TYPE = “radio” NAME = “rating” VALUE = “AA”>
+Excellent: <INPUT TYPE = “radio” NAME = “rating” VALUE = “EX”>
+</p>
+
+<BR>
+<p>Comments:</p>
+<p><TEXTAREA NAME= “comments” ROWS = 8  COLS = 60></TEXTAREA></p>
+<p><HR></p>
+
+<p>
+ <INPUT TYPE = “reset” NAME = “reset” VALUE = “Reset the Form” >
+ <INPUT TYPE = “submit” NAME = “submit” VALUE = “Submit Comment” >
+</p>
+</FORM>
+</h4>
+</body>
+</HTML>
+
+/* Follow up page for r.pl test script
+
+#!/usr/local/bin/perl
+
+sub readGetDate
+{
+local(*queryString) = @_;
+
+$queryString = $ENV(“QUERY_STRING”);
+
+return 1;
+}
+
+# Read the environmentalvariable REQUEST_METHOD, this should be post
+
+$requestType = $ENV(“Request_Method”);
+
+print ”Content-type: text/plain\n\n;
+
+#make sure that this is a post request
+
+if($requestType eq “GET”)
+{
+
+&readGetData(*data);
+
+#Print the data that we read
+print “The GET data is:\n\n”;
+print $data;
+print “\n”;
+
+
+Once completed the Perl subroutine readGetData() should look like this
+
+sub readGetData
+{
+	local(*queryString) = @_ if @_;
+	# Read the environmental variable QUERY_STRING
+	$queryString = $ENV(“QUERY_STRING”);
+	return 1;
+}
+
+
+In C
+
+#include <stdlib.h>
+#include <stdio.h>
+
+void readGetData(char **aString)
+{
+
+	/*The data after it is read in */
+	
+	char *queryString;
+	int len = 0;
+	
+	queryString = getenv(“QUERY_STRING”);
+	
+	if(queryString)
+	  {
+	    len = strlen(queryString);
+	    
+	    *aString = malloc(sizeof(char)*len);
+	    
+	    strcpy(*aString,queryString);
+	   }
+	   else
+	    {
+	      len = 1;
+	      
+	      *aString = malloc(sizeof(char)*len);
+	      
+	      **aString = '\0';
+	      
+ }
+ 
+ void main(int argc, char *argv[])
+  {
+    /* variables for the env. var, and actual data. */	  
+    
+    char *requestType;
+    chat *data = (char *) 0;
+    /*
+    *Print the header required for all CGI scripts thatt output dynamic text data.
+    */
+    printf("Content-type: text/plain\n\n ");
+    
+    /*Read the requesr type */
+    
+    requestType = getenv("REQUEST_METHOD");
+    
+    /* If there is a request type, and it is POST read the data and print it out */
+    
+    if(requestType && !strcmp(requestType,"GET"))
+      {
+        /* Read the data ,passing the string datacby reference readData() will alloc space for it. */
+        
+        readGetData(&data);
+        
+        printf("The GET data is:\n\n");
+        
+        if(data != (char *) 0) printf("%s\n",data);
+      }
+      
+      /*End*/
+      
+      exit(0);
+  }
+  
+  
+  
+//*  READ DATA FOR POST REQUEST  *///
+
+
+
+

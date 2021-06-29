@@ -1,0 +1,94 @@
+Creating sudo User
+usermod -a -G sudo sanjay
+
+
+#include <stdio.h>
+int main(void) {
+  printf("Content-Type: text/plain;charset=us-ascii\n\n");
+  printf("Hello world\n\n");
+  return 0;
+}
+
+
+Common Headers for Cgi
+----------------------
+{
+  Content-length : The length (in bytes) of the output stream. Implies binary data.
+  Content-type : The MIME content type of the output stream.
+  Expires : Date and time when the document is no longer valid and should be reloaded by the browser.
+  Location : Server redirection (cannot be sent as part of a complete header).
+  Pragma : Turns document caching on and off.
+  Status : Status of the request (cannot be sent as part of a complete header).
+  
+  
+  e.g.
+        printf("Content-type: text/html\n");
+        printf("Content-type: text/plain\n");
+        printf("Content-type: image/gif\n");
+        printf("Content-type: image/jpeg\n");
+          
+        printf("Content-type: image/gif\n");
+        printf("Content-length: %ld\n\n", filesize );
+        
+        
+        more info : https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
+        
+ }
+ 
+ 
+ read stdin
+ ----------
+ {
+ #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <my_global.h>
+#include <mysql.h>
+
+
+void finish_with_error(MYSQL *con)
+{
+  fprintf(stderr, "%s\n", mysql_error(con));
+  mysql_close(con);
+  exit(1);
+}
+
+int main()
+{
+	
+	char *termtype ;
+	char buffer[50];
+	int i,val;
+	i=0;
+
+
+	printf("Content-Type: text/html\n\n");
+	printf("<html>\n");
+	printf("<head>\n");
+
+	termtype = getenv("TERM");
+	/*if(termtype != NULL)
+		//printf("your terminal type is \"%s\"\n", termtype);
+	else	//printf("no terminal type defined\n");
+	*/
+
+
+	//while (fgets(i, sizeof i, stdin))
+	//{
+	//	printf("ten: %s\n", i);
+	//}
+	
+  //fscanf(stdin, "%d", &val);
+  
+	fgets(buffer,40,stdin);
+	sprintf(buffer, "%s",buffer); 
+	printf("%s\n", buffer);
+
+return 0;
+
+}
+
+output = xid=sanjayfsfsdfagggggggggggggggggggggs
+
+ }
+ 

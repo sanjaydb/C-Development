@@ -1,0 +1,16 @@
+Building Linux Drivers Basics.
+------------------------------
+{
+
+  Download kernal from https://www.kernel.org/
+  tar xvjf linux-5.4.6.tar.xz
+  xconfig
+  Chnage the modules as required
+   .config
+  Makefile
+  modules_install
+  cp kernal to  /boot.
+  new-kernel-pkg
+  make chnages to grub.conf
+
+}

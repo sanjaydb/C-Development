@@ -1,0 +1,28 @@
+char *myEnvPtr;
+myEnvPtr = (char *)0 ;
+myEnvPtr = getenv("anVaraibale");
+
+if(myEnvPtr)
+{
+  //
+}
+
+
+extern char **environ;
+
+char *getenv(const char *envName)
+{
+  const char *tmp;
+  size_t length;
+  
+  length = strlen(envName);
+  
+  for( tmp = *environ; '\0' != *tmp; tmp += strlen(tmp)+1 )
+  {
+    if ( !(strncmp(tmp,envname, length)) && ('=' == tmp[length])) 
+    {
+      return( (char *) & (tmp[length+1]) );
+    }
+  }
+  return ( (char*)0);
+}

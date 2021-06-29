@@ -1,0 +1,64 @@
+
+To compile file under linux 
+---------------------------
+{
+  $ gcc -Wall -o myPrg myPrg.c
+}
+
+
+Keeping all Files While compiling
+---------------------------------
+{
+  $ gcc -save-temps a.c
+  
+   '.i' extension is a preprocessed file
+   '.s' extension is an assembler file
+   '.o' extension is an object file
+   '.out' extension is an executable file
+}
+
+using -c option
+---------------
+{
+  $ gcc -c 
+
+}
+
+all shared libraries must begin with the letters 'lib'. 
+
+ld a.o -o a
+ls -l /usr/lib/libc.so
+ld a.o -o a /usr/lib/libc.so
+or
+ld -o a a.o -lc 
+
+looks into /lib and /usr/lib by default  
+#ld -o a a.o -lc -dynamic-linker /lib/ld-linux.so.2    --> aading loader for ELF files
+
+
+#gcc -c a.c
+#ld -o a a.o -lc -e main -dynamic-linker /lib/ld-linux.so.2
+#gcc -v a.c		--> to verbose good to know what gcc is doing
+
+# gcc -print-prog-name=cpp
+
+
+
+# gcc -print-prog-name=cc1
+#/usr/lib/gcc-lib/i386-redhat-linux/egcs-2.91.66/cc1 a.i
+
+#as a.s
+#as a.s -o a.o
+#ld -o a a.o -e main -lc -dynamic-linker /lib/ld-linux.so.2
+#./a ; echo $?
+
+
+#gcc -E a.h --> only check header files for error
+
+
+creating a shared lib
+------------------------
+#gcc -shared -o libb.so b.o
+
+#gcc a.c libb.so -o a 
+#cp libb.so /usr/lib

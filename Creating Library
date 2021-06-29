@@ -1,0 +1,118 @@
+san.h
+{
+  #ifndef san_h__
+    #define san_h__
+      extern void san(void);
+  #endif  // san_h__
+}
+
+
+san.c
+{
+  #include <stdio.h>
+
+  void san(void)
+  {
+      printf("From External File : library");
+  }
+}  
+  
+main.c
+{
+  #include <stdio.h>
+  #include "san.h"
+ 
+  int main(void)
+  {
+      printf("Hello World calling san()...");
+      san();
+      return 0;
+  }
+}
+
+
+Compiling
+---------
+{
+
+  Compiling with Position Independent Code = pic
+  ----------------------------------------------
+  {
+    $ gcc -c -Wall -Werror -fpic san.c
+    
+    or
+    
+    $ gcc -shared -Wl,-San,libsan.so -o libsan.so *.o
+    
+  }
+
+  Creating Shared Library Files
+  -----------------------------
+  {
+    #gcc -shared -o libsan.so san.o
+  }
+  
+  Linking 
+  -------
+  {
+     GCC assumes that all libraries start with "lib" and end with ".so" or ".a" 
+     ".so is for shared object or shared libraries, and ".a" is for archive, or statically linked libraries
+    
+      $ gcc -Wall -o Hello main.c -lsan
+  }
+  
+  ldconfig file
+  -------------
+  {
+    #cp /home/sanjay/san/libsan.so /usr/lib
+    #chmod 0755 /usr/lib/libsan.so
+    #ldconfig
+    #ldconfig -p | grep foo
+    {
+      libfoo.so (libc6) => /usr/lib/libsan.so
+    }
+    $ gcc -Wall -o Hello main.c -lsan
+    $ ldd test | grep foo
+      libsan.so => /usr/lib/libsan.so (0xC0DCAFE00)
+    $./hello
+   }
+  }
+  
+
+To view functions in a LIB
+--------------------------
+{
+  #nm libsan.so  
+}
+
+To list the dependencies of a LIB
+---------------------------------
+{
+  #ldd libsan.so
+}
+
+
+Dynamic 
+-------
+{
+  #vi santool.c
+  #gcc -shared -fPIC -o libsantool.so santool.c
+  #gcc main.c -L /home/san/coding/ -llibsantool -o main
+  #export LD_LIBRARY_PATH=/home/san/coding/:$LD_LIBRARY_PATH
+
+}
+
+}
+
+
+RnD
+---
+{
+
+    #gcc -shared -fPIC -Wl,-soname,libsantool.so -o libsantool.so santool.c
+    #gcc s.c -L/home/sanjay/QT/Valmon/libsan -lsantool  -o sample
+    #./sample -> works
+
+
+
+}

@@ -1,0 +1,41 @@
+using git
+---------
+{
+  #git config --global user.name "Sanjay D. Bhalerao"
+  #git config --global user.email "sanjay.d.bhalerao@gmail.com"
+  #git config -l
+  #git init
+  #git status
+  #git add -A
+  #git commit -m "New Changes Done"
+  #git clone <path>
+  #git log
+  #git log --oneline
+  #git log --stat 56dt65
+  #git log -p
+}
+
+online
+create a repo and copy the script
+
+pushing master to github
+{
+  #git remote add origin https://github/sanjaydb/a.git
+  # git push -u origin master
+}
+
+New Branch
+----------
+{
+  git branch <branch name>
+  git branch <branch-name> SHA 
+  git checkout <branch-name> 
+  git push -u origin <branch-name>
+
+  rename, delete, compare branch 
+  ------------------------------
+      Rename: git branch -m <branchName> <newBranchName>
+      Delete: git branch -d <branch-name>
+      Compare branche: git diff <branchName> <masterBranchName>
+      
+}

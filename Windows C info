@@ -1,0 +1,12 @@
+Windef.h : Basic type defination
+winnt.h type defination for unicode support
+winbase.h kernal functions
+winuser.h user interface functions
+wingdi.h graphics device interface functions
+
+
+#define WINAPI __stdcall
+
+typedef unsigned short wchar_t ; -> wchat_t is unsigned short 16 bit wides 
+TCHAR is char
+

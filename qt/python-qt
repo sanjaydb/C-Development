@@ -1,0 +1,11 @@
+pip install pythonqt
+pyuic5 -x test.ui -o test.py   -> for gui from Qt
+
+
+self.menuFile.addAction(self.actionNew)
+self.actionNew.triggered.connect(Lambda: self.clicked("Hello World))
+
+
+def clicked(self, text)
+  self.label.setText(text)
+  self.label.adjustSize() 

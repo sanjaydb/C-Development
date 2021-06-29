@@ -1,0 +1,8 @@
+Layer    -	Function	-                                                                                  Protocols or Standards
+Layer 7: Application	Provides services such as e-mail, file transfers and file servers	                 HTTP, FTP, TFTP, DNS, SMTP, SFTP, SNMP, RLogin, BootP, MIME
+Layer 6: Presentation	Provides encryption, code conversion and data formatting	                         MPEG, JPEG, TIFF
+Layer 5: Session	Negotiates and establishes a connection with another computer	                         SQL, X- Window, ASP, DNA, SCP, NFS, RPC
+Layer 4: Transport	Supports end-to-end delivery of data	                                               TCP, UDP, SPX
+Layer 3: Network	Performs packet routing	                                                               IP, OSPF, ICMP, RIP, ARP, RARP
+Layer 2: Data link	Provides error checking and transfer of message frames	                             Ethernet, Token Ring, 802.11
+Layer 1: Physical	Physically interfaces with transmission medium and sends data over the network	       EIA RS-232, EIA RS-449, IEEE, 802

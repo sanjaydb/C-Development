@@ -1,0 +1,118 @@
+ 822  su
+  823  cd /var
+  824  cd www
+  825  ls -la
+  826  cd html
+  827  ls -la
+  828  rm index.html
+  829  ls -la
+  830  su
+  831  cd ~
+  832  ls -la
+  833  pwd
+  834  mkdir www
+  835  chmod 755 www -R
+  836  cd www
+  837  vi index.php
+  838  ls -la
+  839  chmod 755 index.php 
+  840  sudo ln -s /etc/apache2/mods-available/userdir.load /etc/apache2/mods-enabled/
+  841  usermod -a -G sudo sanjay 
+  842  su
+  843  sudo ln -s /etc/apache2/mods-available/userdir.load /etc/apache2/mods-enabled/
+  844  sudo ln -s /etc/apache2/mods-available/userdir.conf /etc/apache2/mods-enabled/
+  845  sudo nano /etc/apache2/mods-enabled/userdir.conf
+  846  sudo nano /etc/apache2/mods-available/php5.conf
+  847  sudo /etc/init.d/apache2 restart
+  848  history
+
+
+       sudo a2enmod userdir
+
+ 1968  vi /etc/apache2/sites-enabled/000-default.conf 
+ 1969  a2enmod cgi
+ 1970  /etc/init.d/apache2 restart
+
+
+
+ sudo nano /etc/apache2/mods-enabled/userdir.conf
+ {
+ <IfModule mod_userdir.c>
+     UserDir Sites
+     UserDir disabled root
+     UserDir enabled alok
+    <Directory /home/*/Sites>
+    DirectoryIndex index.php index index.html default.html default.htm
+    AllowOverride FileInfo AuthConfig Limit Indexes
+    Options MultiViews Indexes SymLinksIfOwnerMatch IncludesNoExec
+    <Limit GET POST OPTIONS>
+    Require all granted
+    </Limit>
+ <LimitExcept GET POST OPTIONS>
+    Require all denied
+ </LimitExcept>
+ </Directory>
+</IfModule>
+ 
+ }
+ 
+ 
+
+sudo nano /etc/apache2/mods-available/php5.conf
+{
+<IfModule mod_php5.c>
+<FilesMatch ".+\.ph(p[345]?|t|tml)$">
+ SetHandler application/x-httpd-php
+</FilesMatch>
+<FilesMatch ".+\.phps$">
+ SetHandler application/x-httpd-php-source
+ # Deny access to raw php sources by default
+ # To re-enable it's recommended to enable access to the files
+ # only in specific virtual host or directory
+ Order Deny,Allow
+ Deny from all
+</FilesMatch>
+# Deny access to files without filename (e.g. '.php')
+<FilesMatch "^\.ph(p[345]?|t|tml|ps)$">
+ Order Deny,Allow
+ Deny from all
+</FilesMatch>
+# Running PHP scripts in user directories is disabled by default
+# 
+# To re-enable PHP in user directories comment the following lines
+# (from <IfModule ...> to </IfModule>.) Do NOT set it to On as it
+# prevents .htaccess files from disabling it.
+#<IfModule mod_userdir.c>
+# <Directory /home/*/public_html>
+# php_admin_value engine Off
+# </Directory>
+#</IfModule>
+</IfModule>
+
+}
+
+
+
+Enable CGI for user
+-------------------
+
+sudo nano /etc/apache2/mods-enabled/userdir.conf
+
+{
+<Directory /home/*/public_hrml/cgi-bin/>
+Options ExecCGI
+SetHandler cgi-script
+</Directory>
+
+}
+
+
+gcc -Wall -o a.cgi a.c
+
+#include <stdio.h>
+int main(void) {
+  printf("Content-Type: text/plain;charset=us-ascii\n\n");
+  printf("Hello world\n\n");
+  return 0;
+}
+

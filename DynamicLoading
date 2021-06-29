@@ -1,0 +1,145 @@
+typedef int (*some_func)(char *param);
+
+void *myso = dlopen("/path/to/my.so", RTLD_NOW);
+some_func *func = dlsym(myso, "function_name_to_fetch");
+func("foo");
+dlclose(myso);
+
+
+
+
+ctest.h
+#ifndef CTEST_H
+#define CTEST_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void ctest1(int *);
+void ctest2(int *);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
+
+
+a.c
+---
+#include <stdio.h>
+#include <dlfcn.h>
+#include "ctest.h"
+
+int main(int argc, char **argv) 
+{
+   void *lib_handle;
+   double (*fn)(int *);
+   int x;
+   char *error;
+
+   lib_handle = dlopen("/opt/lib/libctest.so", RTLD_LAZY);
+   if (!lib_handle) 
+   {
+      fprintf(stderr, "%s\n", dlerror());
+      exit(1);
+   }
+
+   fn = dlsym(lib_handle, "ctest1");
+   if ((error = dlerror()) != NULL)  
+   {
+      fprintf(stderr, "%s\n", error);
+      exit(1);
+   }
+
+   (*fn)(&x);
+   printf("Valx=%d\n",x);
+
+   dlclose(lib_handle);
+   return 0;
+}
+
+
+gcc -rdynamic -o progdl progdl.c -ldl
+
+---------------------------
+
+f1.c
+-----
+int func1(){
+    return 1;
+}
+
+
+f2.c
+----
+const char* func2(){
+    return "upgrading to version 2";
+}
+
+# gcc -c -fPIC f1.c
+# gcc -c -fPIC f2.c
+# gcc -o sanlib.so -shared -fPIC f1.o f2.o
+
+
+main
+----
+#include <stdio.h>
+#include <stdlib.h>
+#include <dlfcn.h> 
+
+int main()
+{
+    int         ( *f1 )();
+    const char* ( *f2 )();
+
+    void* handle = NULL;
+
+    const char* error_message = NULL;
+
+    handle = dlopen( "sanlib.so", RTLD_LAZY );
+
+    if( !handle )
+    {
+        fprintf( stderr, "dlopen() %s\n", dlerror() );
+        exit( 1 );
+    }
+
+    dlerror();
+
+    f1 = (int (*)()) dlsym( handle, "f1" );
+
+    error_message = dlerror();
+    if( error_message ) //   it means if it is not null
+    {
+        fprintf( stderr, "dlsym() for f1 %s\n", error_message );
+        dlclose( handle );
+        exit( 1 );
+    }
+
+    f2 = (const char* (*)()) dlsym( handle, "f2" );
+
+        error_message = dlerror();
+    if( error_message ) //   it means if it is not null
+    {
+        fprintf( stderr, "dlsym() for f2 %s\n", error_message );
+        dlclose( handle );
+        exit( 1 );
+    }
+
+    printf( "f1: %d\n", ( *f1 )() );
+    printf( "f2: %s\n", ( *f2 )() );
+
+    // unload the library
+    dlclose( handle );
+
+    // the main return value
+    return 0;
+}
+
+
+
+
+gcc main.c -ldl -Wl,-rpath,/home/sanjay/lib
+
