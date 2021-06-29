@@ -15,4 +15,8 @@ static void my_exit(void)
 }
     
 module_init(my_init);
-module_exit(my_exit); It was originally published on https://www.apriorit.com/
+module_exit(my_exit); 
+
+
+
+
