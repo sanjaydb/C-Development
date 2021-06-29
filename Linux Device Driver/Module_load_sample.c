@@ -1,4 +1,5 @@
 // Simple Linux Device Driver
+// This is veery basic modul
 
 #include <linux/init.h>
 #include <linux/module.h>
