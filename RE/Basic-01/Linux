@@ -1,0 +1,11 @@
+#file d01.exe
+#ldd ls
+#ltrace ls
+#hexdump -C d01.exe | head
+#strings d01.exe
+#readelf -h ls
+#objdump -d ls | head
+#strace -f ls
+#nm d01.exe | tail
+#gdb -q ./ls
+
