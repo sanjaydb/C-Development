@@ -4,3 +4,6 @@ To know the file system location on partation
 df filename
 df -T Filename
 df Filename| awk '/^\/dev/ {print $1}'
+
+
+cat /etc/passwd | cut -d: -f1
