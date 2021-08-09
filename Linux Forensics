@@ -21,3 +21,6 @@ find . -perm /2000
 find . -perm /6000
 
 find / -type d \( -perm -g+w -or -perm -o+w \) -exec ls -adl {} \;
+
+find /dir -xdev -perm +o=w ! \( -type d -perm +o=t \) ! -type l -print
+
