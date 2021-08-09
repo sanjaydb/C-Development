@@ -18,4 +18,6 @@ find . -type f -mtime -30 -printf "%M %u %g %TR %TD %p\n" > last30days.txt
   find / -perm -o=wx
   find . -perm /4000 
 find . -perm /2000
+find . -perm /6000
 
+find / -type d \( -perm -g+w -or -perm -o+w \) -exec ls -adl {} \;
