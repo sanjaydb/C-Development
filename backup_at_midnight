@@ -1,0 +1,11 @@
+#!/bin/bash
+DATE=$(date +%Y-%m-%d-%H%M%S)
+BACKUP_DIR="/var/backup"
+SOURCE="/var/www"
+tar -cvzpf $BACKUP_DIR/backup-$DATE.tar.gz $SOURCE
+
+
+00 00 * * * /var/backup/bck.sh
+
+corntab -e 
+
