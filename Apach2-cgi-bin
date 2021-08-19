@@ -1,0 +1,15 @@
+$vi /etc/apache2/conf-available/serve-cgi-bin.conf
+
+$ll /usr/lib/cgi-bin/
+
+$ cd /etc/apache2/mods-enabled
+$ sudo ln -s ../mods-available/cgi.load
+
+$service apache2 reload
+
+$ vi /usr/lib/cgi-bin/hw.sh
+
+$ sudo chmod +x /usr/lib/cgi-bin/hw.sh
+
+
+
