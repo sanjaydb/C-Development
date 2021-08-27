@@ -82,6 +82,11 @@ Ncat: Connection refused.
 
 Use wireshark 
 
+------------------------------------
+
+# ncat -l 9999   <--- block the terminal
+# ncat -l 8080 &   <-- Run in background
+
 
 
 
