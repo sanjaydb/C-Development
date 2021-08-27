@@ -1,0 +1,31 @@
+Layer 1: The physical layer
+----------------------------
+ip link show -> shoud show UP
+	ip link set eth0 up
+
+ip -s link show eth0
+ip -br link show <- good commnad
+
+ip -s link show eth0
+ethtool eth0
+
+
+
+Layer 2: The data link layer
+-----------------------------
+ip neighbor show  --> if problem show FAILED
+{
+	# ip neighbor show
+		192.168.122.170 dev eth0 lladdr 52:54:00:04:2c:5d REACHABLE
+		192.168.122.1 dev eth0 lladdr 52:54:00:11:23:84 REACHABLE
+	# ip neighbor delete 192.168.122.170 dev eth0
+	# ip neighbor show
+		192.168.122.1 dev eth0 lladdr 52:54:00:11:23:84 REACHABLE
+
+}
+
+
+
+Layer 3: The network/internet layer
+-----------------------------------
+# ip -br address show
