@@ -110,4 +110,33 @@ Use wireshark  || tcpdump
 
 
 
+------------------------------------------------------------------------------
+Troubleshoot unexpected server shutdown
 
+Check the logs for possible cause
+# last -1x shutdown
+# last -1x reboot
+
+# grep -E -i -r 'error|warning|panic' /var/log/
+
+
+
+-------------------------------------------------------------
+How to check if port is in use in
+
+# lsof -i -P -n | grep LISTEN
+# netstat -tulpn | grep LISTEN
+# ss -tulpn | grep LISTEN
+# lsof -i:22             <--- port number 
+# nmap -sTU -O 127.0.0.1
+
+# lsof -i -P -n
+# lsof -i -P -n | grep LISTEN
+# netstat -tulpn | grep LISTEN
+
+# ss -tulwn | grep LISTEN
+
+# netstat -anp tcp | grep LISTEN
+# netstat -anp udp | grep LISTEN
+
+# nmap -sT -O localhost
