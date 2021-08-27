@@ -1,19 +1,21 @@
 Layer 1: The physical layer
 ----------------------------
-ip link show -> shoud show UP
+# nmcli device status
+# nmcli con show   <--- Show all connection profiles
+# ip link show -> shoud show UP
 	ip link set eth0 up
 
-ip -s link show eth0
-ip -br link show <- good commnad
+# ip -s link show eth0
+# ip -br link show <- good commnad
 
-ip -s link show eth0
-ethtool eth0
+# ip -s link show eth0
+# ethtool eth0
 
 
 
 Layer 2: The data link layer
 -----------------------------
-ip neighbor show  --> if problem show FAILED
+# ip neighbor show  --> if problem show FAILED
 {
 	# ip neighbor show
 		192.168.122.170 dev eth0 lladdr 52:54:00:04:2c:5d REACHABLE
@@ -28,7 +30,9 @@ ip neighbor show  --> if problem show FAILED
 
 Layer 3: The network/internet layer
 -----------------------------------
+# ip a
 # ip -br address show
+# ip -s -h l show dev enp1s0
 # ping www.google.com
 # traceroute www.google.com
 # ip route show 10.0.0.0/8
@@ -36,6 +40,8 @@ Layer 3: The network/internet layer
 	10.0.0.0/8 via 192.168.122.200 dev eth0  --> routing through diff gateway 192.*
 }
 
+# nslookup google.com 192.168.0.9   <--- via 9
+# nslookup 192.16.*.*   <--- reverse lookup
 # nslookup www.google.com
 {
 	Server: 192.168.122.1
@@ -61,6 +67,12 @@ Layer 3: The network/internet layer
 
 Layer 4: The transport layer
 ----------------------------
+# ss -t
+# ss dst 192.168.122.1
+# ss -l
+# ss -lt
+# ss -tnlp
+
 
 # ss -tunlp4
 {
@@ -80,12 +92,21 @@ Trying 192.168.1.10...
 # nc 192.168.122.1 -u 80
 Ncat: Connection refused.
 
-Use wireshark 
+Use wireshark  || tcpdump
+
+
 
 ------------------------------------
 
 # ncat -l 9999   <--- block the terminal
 # ncat -l 8080 &   <-- Run in background
+
+
+# vi /etc/sysconfig/iptables
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 3000 -j ACCEPT
+
+# service iptables restart
+#netstat -a | grep 3000
 
 
 
