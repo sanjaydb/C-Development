@@ -29,3 +29,59 @@ ip neighbor show  --> if problem show FAILED
 Layer 3: The network/internet layer
 -----------------------------------
 # ip -br address show
+# ping www.google.com
+# traceroute www.google.com
+# ip route show 10.0.0.0/8
+{
+	10.0.0.0/8 via 192.168.122.200 dev eth0  --> routing through diff gateway 192.*
+}
+
+# nslookup www.google.com
+{
+	Server: 192.168.122.1
+	Address: 192.168.122.1#53
+  
+	Non-authoritative answer:
+	Name: www.google.com
+	Address: 172.217.12.132        <-- Orgignial IP
+
+	# ping -c 1 www.google.com
+		PING www.google.com (1.2.3.4) 56(84) bytes of data.    <--- diff IP
+		^C
+		--- www.google.com ping statistics ---
+		1 packets transmitted, 0 received, 100% packet loss, time 0ms
+
+	# cat /etc/hosts
+		127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4
+	::1 localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+	1.2.3.4 www.google.com   <-- problem identified 
+}
+
+
+Layer 4: The transport layer
+----------------------------
+
+# ss -tunlp4
+{
+	-t - Show TCP ports.
+	-u - Show UDP ports.
+	-n - Do not try to resolve hostnames.
+	-l - Show only listening ports.
+	-p - Show the processes that are using a particular socket.
+	-4 - Show only IPv4 sockets.
+}
+
+# telnet database.example.com 3306
+Trying 192.168.1.10...
+^C
+
+
+# nc 192.168.122.1 -u 80
+Ncat: Connection refused.
+
+Use wireshark 
+
+
+
+
