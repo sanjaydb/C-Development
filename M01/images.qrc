@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Images/qrc-logo.png</file>
+        <file>Images/line.png</file>
+        <file>Images/circle.jpg</file>
+        <file>Images/header.jpg</file>
+        <file>Images/network.png</file>
+    </qresource>
+</RCC>
