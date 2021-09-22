@@ -1,0 +1,16 @@
+Enable Cache 
+
+vi /etc/apache2/mods-available/cache_disk.conf 
+uncomment the CacheEnable disk
+
+a2enmod cache
+a2enmod cache_disk
+
+/etc/init.d/apache2 restart
+
+Apt-get install apache2-utils
+
+htcacheclean -d60 -n -t -p /var/cache/apache2/mod_cache_disk -l 50M -i 
+
+vi /etc/rc.local
+htcacheclean -d60 -n -t -p /var/cache/apache2/mod_cache_disk -l 50M -i 
