@@ -62,4 +62,31 @@ CustomLog ${APACHE_LOG_DIR}/access.log combined
 
 sudo ln -s /etc/apache2/sites-available/your_domain.com /etc/apache2/sites-enabled/your_domain.com
 
+----------------------certificate 
+Copy the Intermediate Certificate and SSL Certificate to the directory on the server where you will keep the certificate and key files. Make them readable by root only.
+
+
+“sudo a2ensite example_your_domain”
+/etc/apache2/sites-enabled/example_your_domain
+
+Find the SSL block to configure.
+
+DocumentRoot /var/www/ SSLEngine on SSLCertificateFile /path/to/example _your _domain.crt SSLCertificateKeyFile /path/to/your_private.key SSLCertificateChainFile /path/to/CertificateAuthority.crt
+
+------------config Apache 2
+
+sudo apt update
+sudo apt install apache2
+/etc/apache2/sites-enabled/000-default.conf
+sudo mkdir /var/www/gci/
+cd /var/www/gci/
+nano index.html
+cd /etc/apache2/sites-available/
+sudo cp 000-default.conf gci.conf
+sudo nano gci.conf
+ServerAdmin yourname@example.com
+DocumentRoot /var/www/gci/
+ServerName gci.example.com
+sudo a2ensite gci.conf
+service apache2 reload
 
