@@ -1,0 +1,65 @@
+apt-get update
+apt-get upgrade
+ apt-get install mysql-server
+mysql_secure_installation
+mysql -u root -p
+
+CREATE DATABASE laravel;
+GRANT ALL PRIVILEGES ON laravel.* TO 'admin_user'@'localhost' IDENTIFIED BY 'Strong_Password';
+FLUSH PRIVILEGES;
+exit;
+
+apt-get install php-cli php-mcrypt php-mbstring php-zip php-opcache php-gd php-xml
+
+curl -sS https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
+
+ composer create-project --prefer-dist laravel/laravel my_project
+
+/var/www/Html/my_project/config directory, open the database.php
+
+nano database.php
+ 'mysql' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'yourDBName'),
+            'username' => env('DB_USERNAME', 'yourUserName'),
+            'password' => env('DB_PASSWORD', 'yourPassword'),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
+php artisan serve
+
+Laravel development server started: <http://127.0.0.1:8000>
+
+apt-get install apache2
+
+chown -R www-data:www-data /path/to/laravel
+chmod -R 755 my_project/storage
+
+sudo nano /etc/apache2/sites-available/your_domain.com
+----
+
+<VirtualHost *:80>
+ServerName your_domain.com
+
+ServerAdmin webmaster@localhost
+DocumentRoot /var/www/html/my_project/public
+
+<Directory /var/www/html/my_project>
+AllowOverride All
+</Directory>
+
+ErrorLog ${APACHE_LOG_DIR}/error.log
+CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+sudo ln -s /etc/apache2/sites-available/your_domain.com /etc/apache2/sites-enabled/your_domain.com
+
+
