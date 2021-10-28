@@ -7,6 +7,10 @@ apt-get install mysql-server
 mysql_secure_installation
 mysql -u root -p
 
+mysql -u username -p database_name < file.sql
+mysql> use db_name;
+mysql> source backup-file.sql;
+
 CREATE DATABASE laravel;
 GRANT ALL PRIVILEGES ON laravel.* TO 'admin_user'@'localhost' IDENTIFIED BY 'Strong_Password';
 FLUSH PRIVILEGES;
