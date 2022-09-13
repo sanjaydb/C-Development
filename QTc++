@@ -1,0 +1,33 @@
+
+sqlitedb
+void MainWindow::on_importButton_clicked()
+{
+    QSqlDatabase db=QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("/home/aj/testdatabase.db");
+
+    QString querystr;
+    //querystr=QString(".separator ","");
+    querystr=QString(".separator \",\"");
+    
+    QSqlQuery query(querystr,db);
+    if(query.exec())
+    {
+        qDebug()<<"SUCCESSFULLY QUEIRED ";
+
+        QString querystr2;
+        querystr=QString(".import import_table.csv test_table");
+    }
+    else
+    {
+        qDebug()<<"ERROR DURING QUERY "<<db.lastError().text();
+    }
+}
+
+
+
+Mysql
+
+updateStr = QString("load data infile '%1' into table tt_po_import FIELDS TERMINATED BY ',' LINES TERMINATED BY '%2'").arg("g:/aquasan21/nessus.csv").arg("\\r\\n");
+query.prepare(updateStr);
+query.exec(updateStr);
+
