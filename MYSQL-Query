@@ -1,0 +1,465 @@
+show databases ;
+
+create database qrc03 ;
+use qrc03 ;
+
+use fino ;
+
+drop table info ;
+
+CREATE TABLE user (
+	ID int NOT NULL,
+    LastName varchar(255),
+    FirstName varchar(255),
+    phoneNo varchar(255),
+    PRIMARY KEY (ID)
+);
+
+show tables ;
+
+create table projectinfo (
+
+
+
+
+
+);
+ 
+ 
+ ----------------------------------- New 
+ use fino;
+ 
+create table ClientInfo ( 
+ClientID INT(10) not null,
+OrganizationName  CHAR(50),
+SpockName CHAR(50),
+EmailID CHAR(50),
+PhoneNO CHAR(50),
+PRIMARY KEY (ClientID)
+);
+
+ Insert into ClientInfo (ClientID,OrganizationName,SpockName,EmailID,PhoneNO) values(231205,"Fino Paytech","Mr.Rao","rao@finotech.com","5555555555");
+ Insert into ClientInfo (ClientID,OrganizationName,SpockName,EmailID,PhoneNO) values(231206,"Fino ICICI","Mr.Akash","akash@finotech.com","9999999999");
+ Insert into ClientInfo (ClientID,OrganizationName,SpockName,EmailID,PhoneNO) values(231207,"Fino IDFC","Mr.Karthik","karthik@finotech.com","6666666666");
+ Insert into ClientInfo (ClientID,OrganizationName,SpockName,EmailID,PhoneNO) values(231208,"Fino PayBanksh","Mr.Vinod","vinod@finotech.com","7777777777");
+
+
+
+use fino ;
+drop table AtivityMaster;
+drop table ClientInfo ;
+
+delete from AtivityMaster ;
+delete from Clientinfo ;
+
+
+create table AtivityMaster (
+ClientID INT(10) not null, 
+ActivityID INT(10) not null,
+ActivityName CHAR(50),
+Frequency smallint(2),
+TaskPriority CHAR(1),
+StartDate	DATE,
+ScanCount smallint(2),
+EndDate	DATE,
+ScopIPs INT(5),
+ScanStatus char(10),
+Remarks VARCHAR(512),
+ReportDate DATE,
+ReportRef char(50),
+ActivityStatus char(10),
+CertIn CHAR(1),
+ReportName char(50),
+PoNumber char(50),
+PRIMARY KEY (ActivityID)
+);
+
+1
+insert into  AtivityMaster (ClientID,ActivityID,ActivityName,Frequency,TaskPriority,StartDate,ScanCount,EndDate,ScopIPs,ScanStatus,Remarks,ReportDate,ReportRef,ActivityStatus,CertIn,ReportName,PoNumber)
+values(231205,9001,"VAPT",1,"M","2022-01-21",2,"2022-01-26",600,'Completed',"No Issues as of now","2022-01-28","QRC/01/9001","PASS","Y","QRC/Fino_tech/9001","PO010") ;
+
+2
+insert into  AtivityMaster (ClientID,ActivityID,ActivityName,Frequency,TaskPriority,StartDate,ScanCount,EndDate,ScopIPs,ScanStatus,Remarks,ReportDate,ReportRef,ActivityStatus,CertIn,ReportName,PoNumber)
+values(231205,9002,"IVAPT",1,"M","2022-01-21",1,"2022-01-26",10,'Inprogress',"No Issues as of now","2022-01-28","QRC/01/9002","PASS","N","QRC/Fino_tech/9002","PO011") ;
+
+3
+insert into  AtivityMaster (ClientID,ActivityID,ActivityName,Frequency,TaskPriority,StartDate,ScanCount,EndDate,ScopIPs,ScanStatus,Remarks,ReportDate,ReportRef,ActivityStatus,CertIn,ReportName,PoNumber)
+values(231205,9003,"IOS",2,"M","2022-02-13",3,"2022-02-19",2,'Hold',"No Issues as of now","2022-02-20","QRC/01/9003","FAIL","Y","QRC/Fino_tech/9003","PO012") ;
+
+4
+insert into  AtivityMaster (ClientID,ActivityID,ActivityName,Frequency,TaskPriority,StartDate,ScanCount,EndDate,ScopIPs,ScanStatus,Remarks,ReportDate,ReportRef,ActivityStatus,CertIn,ReportName,PoNumber)
+values(231205,9004,"ANDRIOD",2,"H","2022-02-13",1,"2022-02-19",2,'Hold',"No Issues as of now","2022-02-20","QRC/01/9004","FAIL","N","QRC/Fino_tech/9004","PO013") ;
+
+5
+insert into  AtivityMaster (ClientID,ActivityID,ActivityName,Frequency,TaskPriority,StartDate,ScanCount,EndDate,ScopIPs,ScanStatus,Remarks,ReportDate,ReportRef,ActivityStatus,CertIn,ReportName,PoNumber)
+values(231205,9005,"PT",1,"H","2022-04-12",2,"2022-04-18",30,'Completed',"No Issues as of now","2022-04-19","QRC/01/9005","PASS","N","QRC/Fino_tech/9005","PO014") ;
+
+6
+insert into  AtivityMaster (ClientID,ActivityID,ActivityName,Frequency,TaskPriority,StartDate,ScanCount,EndDate,ScopIPs,ScanStatus,Remarks,ReportDate,ReportRef,ActivityStatus,CertIn,ReportName,PoNumber)
+values(231205,9006,"EPT",4,"H","2022-03-21",2,"2022-03-27",60,'Inprogress',"No Issues as of now","2022-03-28","QRC/01/9006","PASS","Y","QRC/Fino_tech/9006","PO015") ;
+
+7
+insert into  AtivityMaster (ClientID,ActivityID,ActivityName,Frequency,TaskPriority,StartDate,ScanCount,EndDate,ScopIPs,ScanStatus,Remarks,ReportDate,ReportRef,ActivityStatus,CertIn,ReportName,PoNumber)
+values(231205,9007,"SOURCE CODE",1,"M","2022-05-18",1,"2022-05-30",4,'Completed',"No Issues as of now","2022-05-30","QRC/01/9007","FAIL","N","QRC/Fino_tech/9007","PO016") ;
+
+8
+insert into  AtivityMaster (ClientID,ActivityID,ActivityName,Frequency,TaskPriority,StartDate,ScanCount,EndDate,ScopIPs,ScanStatus,Remarks,ReportDate,ReportRef,ActivityStatus,CertIn,ReportName,PoNumber)
+values(231205,9008,"ASV",4,"H","2022-03-21",4,"2022-03-26",21,'Inprogress',"No Issues as of now","2022-03-27","QRC/01/9008","FAIL","Y","QRC/Fino_tech/9008","PO017") ;
+
+9
+insert into  AtivityMaster (ClientID,ActivityID,ActivityName,Frequency,TaskPriority,StartDate,ScanCount,EndDate,ScopIPs,ScanStatus,Remarks,ReportDate,ReportRef,ActivityStatus,CertIn,ReportName,PoNumber)
+values(231205,9009,"CDD",1,"L","2022-02-25",1,"2022-02-26",4,'Completed',"No Issues as of now","2022-02-28","QRC/01/9009","PASS","N","QRC/Fino_tech/9009","PO018") ;
+
+
+
+
+
+Fino ICICI
+
+1
+insert into  AtivityMaster (ClientID,ActivityID,ActivityName,Frequency,TaskPriority,StartDate,ScanCount,EndDate,ScopIPs,ScanStatus,Remarks,ReportDate,ReportRef,ActivityStatus,CertIn,ReportName,PoNumber)
+values(231206,9011,"VAPT",2,"M","2022-01-21",2,"2022-01-26",600,'Inprogress',"No Issues as of now","2022-01-28","QRC/01/9001","PASS","Y","QRC/Fino_tech/9001","PO010") ;
+
+2
+insert into  AtivityMaster (ClientID,ActivityID,ActivityName,Frequency,TaskPriority,StartDate,ScanCount,EndDate,ScopIPs,ScanStatus,Remarks,ReportDate,ReportRef,ActivityStatus,CertIn,ReportName,PoNumber)
+values(231206,9012,"IVAPT",3,"M","2022-01-21",1,"2022-01-26",10,'Inprogress',"No Issues as of now","2022-01-28","QRC/01/9002","PASS","N","QRC/Fino_tech/9002","PO011") ;
+
+3
+insert into  AtivityMaster (ClientID,ActivityID,ActivityName,Frequency,TaskPriority,StartDate,ScanCount,EndDate,ScopIPs,ScanStatus,Remarks,ReportDate,ReportRef,ActivityStatus,CertIn,ReportName,PoNumber)
+values(231206,9013,"IOS",4,"M","2022-02-13",3,"2022-02-19",2,'Hold',"No Issues as of now","2022-02-20","QRC/01/9003","FAIL","Y","QRC/Fino_tech/9003","PO012") ;
+
+4
+insert into  AtivityMaster (ClientID,ActivityID,ActivityName,Frequency,TaskPriority,StartDate,ScanCount,EndDate,ScopIPs,ScanStatus,Remarks,ReportDate,ReportRef,ActivityStatus,CertIn,ReportName,PoNumber)
+values(231206,9014,"ANDRIOD",4,"H","2022-02-13",1,"2022-02-19",2,'Inprogress',"No Issues as of now","2022-02-20","QRC/01/9004","FAIL","N","QRC/Fino_tech/9004","PO013") ;
+
+5
+insert into  AtivityMaster (ClientID,ActivityID,ActivityName,Frequency,TaskPriority,StartDate,ScanCount,EndDate,ScopIPs,ScanStatus,Remarks,ReportDate,ReportRef,ActivityStatus,CertIn,ReportName,PoNumber)
+values(231206,9015,"PT",3,"H","2022-04-12",2,"2022-04-18",30,'Completed',"No Issues as of now","2022-04-19","QRC/01/9005","PASS","N","QRC/Fino_tech/9005","PO014") ;
+
+6
+insert into  AtivityMaster (ClientID,ActivityID,ActivityName,Frequency,TaskPriority,StartDate,ScanCount,EndDate,ScopIPs,ScanStatus,Remarks,ReportDate,ReportRef,ActivityStatus,CertIn,ReportName,PoNumber)
+values(231206,9016,"EPT",3,"H","2022-03-21",2,"2022-03-27",60,'Completed',"No Issues as of now","2022-03-28","QRC/01/9006","PASS","Y","QRC/Fino_tech/9006","PO015") ;
+
+7
+insert into  AtivityMaster (ClientID,ActivityID,ActivityName,Frequency,TaskPriority,StartDate,ScanCount,EndDate,ScopIPs,ScanStatus,Remarks,ReportDate,ReportRef,ActivityStatus,CertIn,ReportName,PoNumber)
+values(231206,9017,"SOURCE CODE",2,"M","2022-05-18",1,"2022-05-30",4,'Completed',"No Issues as of now","2022-05-30","QRC/01/9007","FAIL","N","QRC/Fino_tech/9007","PO016") ;
+
+8
+insert into  AtivityMaster (ClientID,ActivityID,ActivityName,Frequency,TaskPriority,StartDate,ScanCount,EndDate,ScopIPs,ScanStatus,Remarks,ReportDate,ReportRef,ActivityStatus,CertIn,ReportName,PoNumber)
+values(231206,9018,"ASV",6,"H","2022-03-21",4,"2022-03-26",21,'Inprogress',"No Issues as of now","2022-03-27","QRC/01/9008","FAIL","Y","QRC/Fino_tech/9008","PO017") ;
+
+9
+insert into  AtivityMaster (ClientID,ActivityID,ActivityName,Frequency,TaskPriority,StartDate,ScanCount,EndDate,ScopIPs,ScanStatus,Remarks,ReportDate,ReportRef,ActivityStatus,CertIn,ReportName,PoNumber)
+values(231206,9019,"CDD",3,"L","2022-02-25",1,"2022-02-26",4,'HOLD',"No Issues as of now","2022-02-28","QRC/01/9009","PASS","N","QRC/Fino_tech/9009","PO018") ;
+
+multipuletime
+insert into  AtivityMaster (ClientID,ActivityID,ActivityName,Frequency,TaskPriority,StartDate,ScanCount,EndDate,ScopIPs,ScanStatus,Remarks,ReportDate,ReportRef,ActivityStatus,CertIn,ReportName,PoNumber)
+values(231206,9020,"ASV",4,"L","2022-08-01",2,"2022-08-06",10,'HOLD',"No Issues as of now","2022-08-01","QRC/01/9020","PASS","N","QRC/Fino_tech/9020","PO020") ;
+
+
+
+
+
+
+
+Working 
+----------
+select ClientInfo.OrganizationName , AtivityMaster.ActivityName from AtivityMaster join ClientInfo where AtivityMaster.Frequency="4" and 
+AtivityMaster.ClientID="231205" and ClientInfo.ClientID="231205" ;
+
+select  ActivityName , count(ActivityName) from AtivityMaster group by ActivityName ;
+
+select ActivityName , DATE_FORMAT(startDate,'%d/%m/%Y') AS sDate ,DATE_FORMAT(EndDate,'%d/%m/%Y') AS eDate from AtivityMaster 
+WHERE startDate >= '2022-01-21' and EndDate <= '2022-01-26' ;
+
+
+select ClientID,ActivityID, ActivityName,Frequency,ScanCount, ScopIPs, DATE_FORMAT(startDate,'%d/%m/%Y') AS sDate , DATE_FORMAT(EndDate,'%d/%m/%Y') 
+AS eDate from AtivityMaster;
+
+
+--------------------------------------------------------
+
+
+Nessus File Import 
+select ClientID,ActivityID,ActivityName,Plugin_ID,Risk,Host,Name, Protocol from Ativity ;
+
+create table Ativity (
+ClientID INT(10) not null, 
+ActivityID INT(10) not null,
+ActivityName CHAR(50),
+Plugin_ID VARCHAR(10),	
+CVE VARCHAR(15),	
+CVSSv2BS VARCHAR(15),	
+Risk VARCHAR(10),	
+Host VARCHAR(15),	
+Protocol VARCHAR(10),	
+Port VARCHAR(8),	
+Name VARCHAR(200),	
+Synopsis VARCHAR(200),	
+Description VARCHAR(300),	
+Solution VARCHAR(300),	
+SeeAlso VARCHAR(100),	
+PluginOutput VARCHAR(100),	
+STIGSeverity VARCHAR(15),	
+CVSSv3BS VARCHAR(20),	
+CVSSv2TS VARCHAR(20),	
+CVSSv3TS VARCHAR(20),	
+RiskFactor VARCHAR(11),	
+BID VARCHAR(200),	
+XREF VARCHAR(300),	
+MSKB VARCHAR(100),	
+PluginPubDate VARCHAR(20),	
+PluginModDate VARCHAR(20),	
+Metasploit VARCHAR(10),	
+Core VARCHAR(10),  
+Impact VARCHAR(10),	
+CANVAS VARCHAR(10)
+
+);
+
+
+
+sudo ls -la /media/sf_Tmp/Nessues/ameredial_v5.csv 
+
+LOAD DATA LOCAL INFILE
+
+LOAD DATA LOCAL INFILE '/media/sf_Tmp/Nessues/ameredial_v5.csv' INTO TABLE Ativity FIELDS TERMINATED BY ',';
+
+LOAD DATA INFILE '/tmp/prospects.txt' INTO TABLE prospect_contact FIELDS TERMINATED BY '|' LINES STARTING BY '"' TERMINATED BY '"\r\n';
+SELECT s.ActivityID,s.NAME,IFNULL(c.CLICKS,0) FROM AtivityMaster s LEFT JOIN ciicks c ON s.ID = c.PRODUCT_ID
+
+
+
+Show tables ;
+select * from ClientInfo;
+select * from Ativity ;
+select * from AtivityMaster ;
+
+
+select  count(distinct(ActivityName)) from AtivityMaster group by ActivityName ;
+
+select  ActivityName , count(ActivityName) from AtivityMaster  WHERE startDate >= '2021-01-01' AND EndDate <= '2022-08-01' group by ActivityName ;
+ 
+ STR_TO_DATE(datestring, '%d/%m/%Y')
+ 
+select ActivityName , DATE_FORMAT(startDate,'%d/%m/%Y') AS sDate ,DATE_FORMAT(EndDate,'%d/%m/%Y') AS eDate from AtivityMaster 
+WHERE startDate >= '2022-01-21' and EndDate <= '2022-01-26' ;
+
+
+describe AtivityMaster ;
+
+select * from AtivityMaster ;
+describe AtivityMaster ;
+
+select * from AtivityMaster WHERE startDate >= '2021-01-01' AND EndDate <= '2022-08-01' ;
+
+
+select * from AtivityMaster WHERE startDate >= '2021-01-01' AND EndDate <= '2022-08-01' and ActivityName="VAPT";
+
+select ActivityID, ActivityName,Frequency,ScanCount, ScopIPs from AtivityMaster WHERE StartDate >= '2021-01-01' AND EndDate <= '2022-08-01' is not NULL and ActivityName="VAPT";
+
+select s.ClientID,s.OrganizationName,q.ActivityID, q.ActivityName,q.Frequency,q.ScanCount, q.ScopIPs from ClientInfo s Left Join AtivityMaster q on q.ClientID = s.ClientID; 
+
+
+select * from AtivityMaster ;
+select * from ClientInfo ;
+
+
+select ActivityID, ActivityName,Frequency,ScanCount, ScopIPs from AtivityMaster WHERE StartDate >= '2021-01-01' AND EndDate <= '2022-08-01' is not NULL and ActivityName="VAPT";
+
+select ClientID,ActivityID, ActivityName,Frequency,ScanCount, ScopIPs, DATE_FORMAT(startDate,'%d/%m/%Y') AS sDate , DATE_FORMAT(EndDate,'%d/%m/%Y') 
+AS eDate from AtivityMaster;
+
+select s.OrganizationName, q.ActivityName,q.Frequency,q.ScanCount, q.ScopIPs , DATE_FORMAT(q.startDate,'%d/%m/%Y') AS sDate ,DATE_FORMAT(q.EndDate,'%d/%m/%Y') 
+AS eDate from ClientInfo s Left Join AtivityMaster q on  
+q.ClientID = s.ClientID WHERE q.startDate >= '2022-01-21' and q.EndDate <= '2022-08-26' ;
+
+
+
+
+
+/*-----------------------------
+     #   17th Sept. 2022
+------------------------------*/
+
+
+/* --------------------------------------------------------------------------------------------------------------------- */
+
+
+
+show tables ;
+Fields -> 	(org_name,ciso_name,ciso_email,ciso_phone,entry_date)
+
+create table ClientInfo ( 
+	c_id INT(10) NOT NULL AUTO_INCREMENT,
+	org_name  CHAR(50),
+	ciso_name CHAR(50),
+	ciso_email CHAR(50),
+	ciso_phone CHAR(50),
+	entry_date DATE ,
+	PRIMARY KEY (c_id)
+);
+
+ALTER TABLE ClientInfo AUTO_INCREMENT=231205;
+
+insert into ClientInfo (org_name,ciso_name,ciso_email,ciso_phone,entry_date) values("Fino Paytech","Mr.Vamsi","vamsi@finopaytech.com","9977112233","2022-03-21");
+insert into ClientInfo (org_name,ciso_name,ciso_email,ciso_phone,entry_date) values("Fino ICICI","Mr.Satish","satish@finoicici.com","9911446677","2022-09-08");
+insert into ClientInfo (org_name,ciso_name,ciso_email,ciso_phone,entry_date) values("Fino IDFC","Mr.Ravi","ravi@finoidfc.com","	9933779900","2022-08-13");
+insert into ClientInfo (org_name,ciso_name,ciso_email,ciso_phone,entry_date) values("Fino Bank","Mr.Venkat","venkat@finobanks.com","9966113344","2022-03-12");
+
+
+
+/* --------------------------------------------------------------------------------------------------------------------- */
+
+drop table ActivityMaster ;
+
+
+create table ActivityMaster (
+		xua_id  INT(10) NOT NULL AUTO_INCREMENT,
+		c_id INT(10) NOT NULL,
+		a_id INT(10) NOT NULL,
+		Ativity_Name CHAR(5),
+		freq TINYINT, 
+		ativity_status CHAR(4),
+		ativity_ips_done SMALLINT,
+		scope_ip SMALLINT,
+		crm_no INT,
+		start_date DATE,
+		end_date DATE,
+		extra_ips_bit bool,
+		extra_ips_howmuch SMALLINT,
+		extra_ip_start_date DATE,
+		assignee_to CHAR(15),
+		PRIMARY KEY (xua_id)
+);
+
+ALTER TABLE ActivityMaster AUTO_INCREMENT=9001;
+
+(xua_id,c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values(
+"231205"/* c_id can be assigned mulitipule times as per the clients requirment : PASS/FAIL */,
+"6601"/* a_id -> Client Info Table Mapping */,
+"ASV"/* Ativity_Name */,
+"1"/* freq */,
+"FAIL"/* ativity_status */,
+"5"/* ativity_ips_done */,
+"6"/* scope_ip */,
+"101"/* crm_no can be assigned mulitipule times as per the assignee ativity : Pass/Fail  requirment */,
+"2022-01-01"/* start_date YYYY-MM-DD */,
+"2022-01-06"/* end_date YYYY-MM-DD */,
+false /* extra_ips_bit */,
+"0"/* extra_ips_howmuch */,
+"1992-01-01"/* extra_ip_start_date */,
+"Ayushi"/* assignee_to */
+);
+
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6601","ASV","2","PASS","5","6","101","2022-01-08","2022-01-14","0","0","1992-01-01","Manisha");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6602","ASV","1","PASS","10","10","102","2022-03-11","2022-03-17","0","0","1992-01-01","Viren");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6003","ASV","1","FAIL","12","12","103","2022-06-13","2022-06-19","0","0","1992-01-01","Atharva");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6003","ASV","2","FAIL","5","12","103","2022-06-21","2022-06-27","0","0","1992-01-01","Taufique");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6003","ASV","3","FAIL","3","12","103","2022-06-29","2022-07-03","0","0","1992-01-01","AdityaP");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6004","ASV","1","PASS","15","15","104","2022-07-12","2022-07-18","0","0","1992-01-01","AdityaD");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6005","IVA","1","FAIL","100","100","105","2022-03-14","2022-03-19","0","0","1992-01-01","Saurabh");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6005","IVA","2","PASS","100","100","105","2022-04-22","2022-04-28","0","0","1992-01-01","Kunal");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6006","EPT","1","FAIL","3","3","106","2022-03-24","2022-03-29","0","0","1992-01-01","Sajid");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6006","EPT","2","FAIL","3","3","106","2022-05-01","2022-05-07","0","0","1992-01-01","Rajidip");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6006","EPT","3","PASS","3","3","106","2022-05-10","2022-05-16","0","0","1992-01-01","Verain");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6007","SCR","1","FAIL","1","1","107","2022-01-01","2022-01-06","0","0","1992-01-01","Robin");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6007","SCR","2","PASS","1","1","107","2022-01-08","2022-01-16","0","0","1992-01-01","Aparna");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6008","IVAPT","1","PASS","45","45","108","2022-03-14","2022-03-19","0","0","1992-01-01","Ayushi");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6009","POS","1","PASS","1","1","109","2022-06-13","2022-06-18","0","0","1992-01-01","Manisha");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6010","IVAPT","1","FAIL","200","200","110","2022-02-18","2022-02-22","0","0","1992-01-01","Viren");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6010","IVAPT","2","FAIL","300","200","110","2022-03-24","2022-03-29","1","100","2022-03-23","Atharva");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6010","IVAPT","3","FAIL","300","200","110","2022-04-01","2022-04-06","1","100","2022-03-23","Taufique");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6011","IOS","1","FAIL","1","1","111","2022-05-05","2022-05-12","0","0","1992-01-01","AdityaP");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6011","IOS","2","PASS","1","1","111","2022-05-16","2022-05-21","0","0","1992-01-01","AdityaD");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6012","AND","1","FAIL","1","1","111","2022-07-08","2022-07-15","0","0","1992-01-01","Saurabh");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6012","AND","2","PASS","1","1","111","2022-07-17","2022-07-18","0","0","1992-01-01","Kunal");
+
+insert into ActivityMaster (c_id,a_id,Ativity_Name,freq,ativity_status,ativity_ips_done,scope_ip,crm_no,start_date,end_date,extra_ips_bit,extra_ips_howmuch,extra_ip_start_date,assignee_to)
+values("231205","6013","CDD","1","PASS","1","1","111","2022-06-13","2022-06-18","0","0","1992-01-01","Sajid");
+
+
+
+select * from ActivityMaster ;
+
+
+
+
+/* --------------------------------------------------------------------------------------------------------------------- */
+        
+        
+("xuv_id","xua_id","c_id","a_id","ip_id","Ativity_Name","freq","ativity_status","scaned_ip","critical","high","medium","low","info","extra_bit","extra_ip_start_date","assignee_to","v_id","vul_name","vul_fixed","vul_fixed_date");
+
+create table ActivityData (
+xuv_id INT(10) NOT NULL AUTO_INCREMENT,
+xua_id INT(10) NOT NULL,
+c_id INT(10) NOT NULL,
+a_id INT(10) NOT NULL,
+ip_id INT(10) NOT NULL,
+Ativity_Name CHAR(5),
+freq TINYINT,
+ativity_status CHAR(4),
+scaned_ip VARCHAR(15),
+critical int(1),
+high int(1),
+medium int(1),
+low int(1),
+info int(1),
+extra_bit bool,
+extra_ip_start_date DATE,
+assignee_to CHAR(15),
+v_id int(9),
+vul_name VARCHAR(5),
+vul_fixed bool,
+vul_fixed_date DATE,
+PRIMARY KEY (xuv_id)
+);
+
+ALTER TABLE ActivityData AUTO_INCREMENT=5001;
