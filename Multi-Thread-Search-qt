@@ -1,0 +1,61 @@
+ an example code for a multi-threaded file search application using the Qt framework:
+ 
+ cpp
+ ---
+ #include <QCoreApplication>
+#include <QDir>
+#include <QFileInfo>
+#include <QFuture>
+#include <QtConcurrent>
+
+void search(const QString& path, const QString& name)
+{
+    QDir dir(path);
+    dir.setFilter(QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot);
+
+    QFileInfoList list = dir.entryInfoList();
+
+    for (const QFileInfo& fileInfo : list) {
+        if (fileInfo.fileName() == name) {
+            qDebug() << "Found file:" << fileInfo.filePath();
+        }
+    }
+
+    for (const QFileInfo& fileInfo : list) {
+        if (fileInfo.isDir()) {
+            QFuture<void> future = QtConcurrent::run(search, fileInfo.filePath(), name);
+            future.waitForFinished();
+        }
+    }
+}
+
+int main(int argc, char *argv[])
+{
+    QCoreApplication app(argc, argv);
+
+    if (argc < 3) {
+        qDebug() << "Usage:" << argv[0] << "<directory> <filename>";
+        return 0;
+    }
+
+    QString directory = argv[1];
+    QString filename = argv[2];
+
+    QFuture<void> future = QtConcurrent::run(search, directory, filename);
+    future.waitForFinished();
+
+    return 0;
+}
+
+
+his code searches for a file with the specified name in the specified directory and its subdirectories using multiple threads.
+The search() function is recursively called for each subdirectory in a separate thread using the QtConcurrent::run() function. 
+The QFuture::waitForFinished() function is used to wait for all threads to finish.
+
+To use this code, you can pass the directory and filename to search for as command line arguments to the program. For example:
+
+./filesearch /path/to/directory myfile.txt
+
+
+This will search for a file named myfile.txt in the directory /path/to/directory and its subdirectories. - OM
+
