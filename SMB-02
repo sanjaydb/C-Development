@@ -1,0 +1,47 @@
+OM : To upload a file to a shared SMB server using the Samba library in C, you can use the smbc_creat() function to create a new file,
+and then use smbc_write() to write data to the file. Here's an example code snippet:
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <libsmbclient.h>
+
+int main() {
+    SMBCCTX *ctx;
+    SMBCFILE *file;
+    const char *url = "smb://user:password@server/share/new_file.txt";
+    const char *data = "Hello, world!";
+
+    // Initialize Samba context
+    smbc_init_context();
+    ctx = smbc_new_context();
+
+    // Connect to SMB server
+    if (smbc_init_context(ctx) != 0) {
+        fprintf(stderr, "Failed to initialize Samba context\n");
+        return 1;
+    }
+
+    // Create new file and write data
+    file = smbc_creat(ctx, url, O_WRONLY | O_TRUNC, 0666);
+    if (file == NULL) {
+        fprintf(stderr, "Failed to create file %s\n", url);
+        return 1;
+    }
+    if (smbc_write(ctx, file, data, strlen(data)) != strlen(data)) {
+        fprintf(stderr, "Failed to write data to file\n");
+        return 1;
+    }
+
+    // Cleanup
+    smbc_close(file);
+    smbc_free_context(ctx);
+    smbc_shutdown_context();
+
+    return 0;
+}
+
+
+This code creates a new file at smb://server/share/new_file.txt with the username user and password password, 
+and writes the string "Hello, world!" to the file. You can modify the URL and file access parameters according to your needs. 
+Note that you'll need to link against the Samba library (-lsmbclient) when compiling the code. - OM
