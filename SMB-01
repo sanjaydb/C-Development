@@ -1,0 +1,49 @@
+OM : To access SMB (Server Message Block) in C language, you can use the Samba library which provides an API for accessing SMB/CIFS resources. 
+Here's an example code snippet to connect to a SMB server using the Samba library:
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <libsmbclient.h>
+
+int main() {
+    SMBCCTX *ctx;
+    SMBCFILE *file;
+    const char *url = "smb://user:password@server/share/file.txt";
+
+    // Initialize Samba context
+    smbc_init_context();
+    ctx = smbc_new_context();
+
+    // Connect to SMB server
+    if (smbc_init_context(ctx) != 0) {
+        fprintf(stderr, "Failed to initialize Samba context\n");
+        return 1;
+    }
+
+    file = smbc_open(ctx, url, O_RDONLY, 0);
+    if (file == NULL) {
+        fprintf(stderr, "Failed to open file %s\n", url);
+        return 1;
+    }
+
+    // Read file contents
+    char buffer[1024];
+    int nread;
+    while ((nread = smbc_read(ctx, file, buffer, sizeof(buffer))) > 0) {
+        fwrite(buffer, 1, nread, stdout);
+    }
+
+    // Cleanup
+    smbc_close(file);
+    smbc_free_context(ctx);
+    smbc_shutdown_context();
+
+    return 0;
+}
+
+
+This code connects to a SMB server at smb://server/share/file.txt with the username user and password password, 
+and reads the contents of the file file.txt. You can modify the URL and file access parameters according to your needs. 
+Note that you'll need to link against the Samba library (-lsmbclient) when compiling the code.
+
+
