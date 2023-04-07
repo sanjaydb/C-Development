@@ -1,0 +1,163 @@
+#include <stdio.h>
+#include <windows.h>
+#include <wbemidl.h>
+
+#pragma comment(lib, "wbemuuid.lib")
+
+int main()
+{
+    HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+    if (FAILED(hr))
+    {
+        printf("Failed to initialize COM library. Error code = 0x%x\n", hr);
+        return 1;
+    }
+
+    hr = CoInitializeSecurity(NULL, -1, NULL, NULL, RPC_C_AUTHN_LEVEL_DEFAULT,
+        RPC_C_IMP_LEVEL_IMPERSONATE, NULL, EOAC_NONE, NULL);
+    if (FAILED(hr))
+    {
+        printf("Failed to initialize security. Error code = 0x%x\n", hr);
+        CoUninitialize();
+        return 1;
+    }
+
+    IWbemLocator* pLocator = NULL;
+    hr = CoCreateInstance(CLSID_WbemLocator, NULL, CLSCTX_INPROC_SERVER,
+        IID_IWbemLocator, (LPVOID*)&pLocator);
+    if (FAILED(hr))
+    {
+        printf("Failed to create WMI locator. Error code = 0x%x\n", hr);
+        CoUninitialize();
+        return 1;
+    }
+
+    IWbemServices* pServices = NULL;
+    hr = pLocator->ConnectServer(L"ROOT\\CIMV2", NULL, NULL, NULL,
+        WBEM_FLAG_CONNECT_USE_MAX_WAIT, NULL, NULL, &pServices);
+    if (FAILED(hr))
+    {
+        printf("Failed to connect to WMI service. Error code = 0x%x\n", hr);
+        pLocator->Release();
+        CoUninitialize();
+        return 1;
+    }
+
+    hr = CoSetProxyBlanket(pServices, RPC_C_AUTHN_WINNT, RPC_C_AUTHZ_NONE, NULL,
+        RPC_C_AUTHN_LEVEL_CALL, RPC_C_IMP_LEVEL_IMPERSONATE, NULL, EOAC_NONE);
+    if (FAILED(hr))
+    {
+        printf("Failed to set proxy blanket. Error code = 0x%x\n", hr);
+        pServices->Release();
+        pLocator->Release();
+        CoUninitialize();
+        return 1;
+    }
+
+    IEnumWbemClassObject* pEnumerator = NULL;
+    hr = pServices->ExecQuery(L"WQL", L"SELECT * FROM Win32_BaseBoard", WBEM_FLAG_FORWARD_ONLY, NULL, &pEnumerator);
+    if (FAILED(hr))
+    {
+        printf("Failed to execute WMI query. Error code = 0x%x\n", hr);
+        pServices->Release();
+        pLocator->Release();
+        CoUninitialize();
+        return 1;
+    }
+
+    IWbemClassObject* pObject = NULL;
+    ULONG uReturned = 0;
+    while (pEnumerator)
+    {
+        hr = pEnumerator->Next(WBEM_INFINITE, 1, &pObject, &uReturned);
+        if (FAILED(hr))
+        {
+            printf("Failed to enumerate WMI query results. Error code = 0x%x\n", hr);
+            pEnumerator->Release();
+            pServices->Release();
+            pLocator->Release();
+            CoUninitialize();
+            return 1;
+        }
+        if (uReturned == 0)
+        {
+            break;
+        }
+
+        VARIANT var;
+        hr = pObject->Get(L"SerialNumber", 0, &var, NULL, NULL);
+        if (FAILED(hr))
+        {
+            printf("Failed to get motherboard serial number. Error code = 0x%x\n", hr);
+            pObject->Release();
+            pObject->Release();
+            pEnumerator->Release();
+            pServices->Release();
+            pLocator->Release();
+            CoUninitialize();
+            return 1;
+        }
+
+        printf("Motherboard serial number: %ws\n", var.bstrVal);
+        VariantClear(&var);
+
+        pObject->Release();
+    }
+
+    pEnumerator->Release();
+
+    pEnumerator = NULL;
+    hr = pServices->ExecQuery(L"WQL", L"SELECT * FROM Win32_BIOS", WBEM_FLAG_FORWARD_ONLY, NULL, &pEnumerator);
+    if (FAILED(hr))
+    {
+        printf("Failed to execute WMI query. Error code = 0x%x\n", hr);
+        pServices->Release();
+        pLocator->Release();
+        CoUninitialize();
+        return 1;
+    }
+
+    while (pEnumerator)
+    {
+        hr = pEnumerator->Next(WBEM_INFINITE, 1, &pObject, &uReturned);
+        if (FAILED(hr))
+        {
+            printf("Failed to enumerate WMI query results. Error code = 0x%x\n", hr);
+            pEnumerator->Release();
+            pServices->Release();
+            pLocator->Release();
+            CoUninitialize();
+            return 1;
+        }
+        if (uReturned == 0)
+        {
+            break;
+        }
+
+        hr = pObject->Get(L"Name", 0, &var, NULL, NULL);
+        if (FAILED(hr))
+        {
+            printf("Failed to get BIOS name. Error code = 0x%x\n", hr);
+            pObject->Release();
+            pEnumerator->Release();
+            pServices->Release();
+            pLocator->Release();
+            CoUninitialize();
+            return 1;
+        }
+
+        printf("BIOS name: %ws\n", var.bstrVal);
+        VariantClear(&var);
+
+        pObject->Release();
+    }
+
+    pEnumerator->Release();
+
+    pServices->Release();
+    pLocator->Release();
+
+    CoUninitialize();
+
+    return 0;
+}
