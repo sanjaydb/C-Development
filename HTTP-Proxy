@@ -1,0 +1,160 @@
+#include <stdio.h>
+#include <winsock2.h>
+
+#define BUFFER_SIZE 1024
+
+int main(int argc, char *argv[]) {
+    WSADATA wsaData;
+    SOCKET serverSock, clientSock;
+    struct sockaddr_in serverAddr, clientAddr;
+    int iResult, clientAddrLen = sizeof(clientAddr);
+    char buffer[BUFFER_SIZE];
+
+    // Initialize Winsock
+    iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (iResult != 0) {
+        printf("WSAStartup failed: %d\n", iResult);
+        return 1;
+    }
+
+    // Create a TCP socket
+    serverSock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (serverSock == INVALID_SOCKET) {
+        printf("socket failed: %d\n", WSAGetLastError());
+        WSACleanup();
+        return 1;
+    }
+
+    // Bind the socket to a local address and port
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_addr.s_addr = INADDR_ANY;
+    serverAddr.sin_port = htons(8080);
+
+    iResult = bind(serverSock, (struct sockaddr *)&serverAddr, sizeof(serverAddr));
+    if (iResult == SOCKET_ERROR) {
+        printf("bind failed: %d\n", WSAGetLastError());
+        closesocket(serverSock);
+        WSACleanup();
+        return 1;
+    }
+
+    // Listen for incoming connections
+    iResult = listen(serverSock, SOMAXCONN);
+    if (iResult == SOCKET_ERROR) {
+        printf("listen failed: %d\n", WSAGetLastError());
+        closesocket(serverSock);
+        WSACleanup();
+        return 1;
+    }
+
+    printf("Proxy server is running on port 8080...\n");
+
+    while (1) {
+        // Accept a client connection
+        clientSock = accept(serverSock, (struct sockaddr *)&clientAddr, &clientAddrLen);
+        if (clientSock == INVALID_SOCKET) {
+            printf("accept failed: %d\n", WSAGetLastError());
+            closesocket(serverSock);
+            WSACleanup();
+            return 1;
+        }
+
+        printf("Client connected: %s:%d\n", inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
+
+        // Receive data from the client
+        iResult = recv(clientSock, buffer, BUFFER_SIZE, 0);
+        if (iResult > 0) {
+            buffer[iResult] = '\0';
+            printf("Received request from client:\n%s\n", buffer);
+        }
+        else if (iResult == 0) {
+            printf("connection closed\n");
+        }
+        else {
+            printf("recv failed: %d\n", WSAGetLastError());
+        }
+
+        // Create a new socket to connect to the remote server
+        SOCKET remoteSock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+        if (remoteSock == INVALID_SOCKET) {
+            printf("socket failed: %d\n", WSAGetLastError());
+            closesocket(clientSock);
+            continue;
+        }
+
+        // Parse the HTTP request to get the remote server address and port
+        char *remoteHost = strtok(buffer, " ");
+        if (remoteHost == NULL) {
+            printf("invalid request\n");
+            closesocket(clientSock);
+            continue;
+        }
+
+        char *remotePort = "80"; // Default port for HTTP
+        char *portStart = strchr(remoteHost, ':');
+        if (portStart != NULL) {
+            *portStart = '\0';
+            remotePort = portStart + 1;
+       
+        // Look up the remote server address using DNS
+        struct hostent *remoteHostEnt = gethostbyname(remoteHost);
+        if (remoteHostEnt == NULL) {
+            printf("failed to lookup host: %s\n", remoteHost);
+            closesocket(clientSock);
+            continue;
+        }
+
+        // Connect to the remote server
+        struct sockaddr_in remoteAddr;
+        remoteAddr.sin_family = AF_INET;
+        remoteAddr.sin_addr.s_addr = *((unsigned long *)remoteHostEnt->h_addr);
+        remoteAddr.sin_port = htons(atoi(remotePort));
+
+        iResult = connect(remoteSock, (struct sockaddr *)&remoteAddr, sizeof(remoteAddr));
+        if (iResult == SOCKET_ERROR) {
+            printf("connect failed: %d\n", WSAGetLastError());
+            closesocket(remoteSock);
+            closesocket(clientSock);
+            continue;
+        }
+
+        printf("Connected to remote server: %s:%s\n", remoteHost, remotePort);
+
+        // Send the request to the remote server
+        iResult = send(remoteSock, buffer, strlen(buffer), 0);
+        if (iResult == SOCKET_ERROR) {
+            printf("send failed: %d\n", WSAGetLastError());
+            closesocket(remoteSock);
+            closesocket(clientSock);
+            continue;
+        }
+
+        // Forward the response from the remote server to the client
+        while (1) {
+            iResult = recv(remoteSock, buffer, BUFFER_SIZE, 0);
+            if (iResult > 0) {
+                iResult = send(clientSock, buffer, iResult, 0);
+                if (iResult == SOCKET_ERROR) {
+                    printf("send failed: %d\n", WSAGetLastError());
+                    break;
+                }
+            }
+            else if (iResult == 0) {
+                printf("connection closed by remote server\n");
+                break;
+            }
+            else {
+                printf("recv failed: %d\n", WSAGetLastError());
+                break;
+            }
+        }
+
+        closesocket(remoteSock);
+        closesocket(clientSock);
+        printf("Disconnected from remote server.\n");
+    }
+
+    closesocket(serverSock);
+    WSACleanup();
+    return 0;
+}
