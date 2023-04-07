@@ -1,0 +1,123 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <winsock2.h>
+
+#pragma comment(lib, "ws2_32.lib")
+
+#define BUFFER_SIZE 1024
+
+int main(void)
+{
+    WSADATA wsaData;
+    int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (iResult != 0) {
+        printf("WSAStartup failed: %d\n", iResult);
+        return 1;
+    }
+
+    // Create a socket
+    SOCKET sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (sock == INVALID_SOCKET) {
+        printf("socket creation failed\n");
+        WSACleanup();
+        return 1;
+    }
+
+    // Connect to the IMAP server
+    struct sockaddr_in serverAddr;
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_port = htons(993); // IMAP over SSL port
+    serverAddr.sin_addr.s_addr = inet_addr("mail.example.com");
+
+    iResult = connect(sock, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
+    if (iResult == SOCKET_ERROR) {
+        printf("connect failed: %d\n", WSAGetLastError());
+        closesocket(sock);
+        WSACleanup();
+        return 1;
+    }
+
+    // Send the login command
+    char buffer[BUFFER_SIZE];
+    sprintf_s(buffer, BUFFER_SIZE, "a001 LOGIN user@example.com password\r\n");
+    iResult = send(sock, buffer, strlen(buffer), 0);
+    if (iResult == SOCKET_ERROR) {
+        printf("send failed: %d\n", WSAGetLastError());
+        closesocket(sock);
+        WSACleanup();
+        return 1;
+    }
+
+    // Receive the response
+    iResult = recv(sock, buffer, BUFFER_SIZE, 0);
+    if (iResult > 0) {
+        buffer[iResult] = '\0';
+        printf("%s", buffer);
+    }
+    else if (iResult == 0) {
+        printf("connection closed\n");
+    }
+    else {
+        printf("recv failed: %d\n", WSAGetLastError());
+    }
+
+    // Send the select command to choose the mailbox
+    sprintf_s(buffer, BUFFER_SIZE, "a002 SELECT INBOX\r\n");
+    iResult = send(sock, buffer, strlen(buffer), 0);
+    if (iResult == SOCKET_ERROR) {
+        printf("send failed: %d\n", WSAGetLastError());
+        closesocket(sock);
+        WSACleanup();
+        return 1;
+    }
+
+    // Receive the response
+    iResult = recv(sock, buffer, BUFFER_SIZE, 0);
+    if (iResult > 0) {
+        buffer[iResult] = '\0';
+        printf("%s", buffer);
+    }
+    else if (iResult == 0) {
+        printf("connection closed\n");
+    }
+    else {
+        printf("recv failed: %d\n", WSAGetLastError());
+    }
+
+    // Send the fetch command to retrieve the first message's body
+    sprintf_s(buffer, BUFFER_SIZE, "a003 FETCH 1 BODY.PEEK[]\r\n");
+    iResult = send(sock, buffer, strlen(buffer), 0);
+    if (iResult == SOCKET_ERROR) {
+        printf("send failed: %d\n", WSAGetLastError());
+        closesocket(sock);
+        WSACleanup();
+        return 1;
+    }
+
+    // Receive the response
+    iResult = recv(sock, buffer, BUFFER_SIZE, 0);
+    if (iResult >
+
+    if (iResult > 0) {
+        buffer[iResult] = '\0';
+        printf("%s", buffer);
+    }
+    else if (iResult == 0) {
+        printf("connection closed\n");
+    }
+    else {
+        printf("recv failed: %d\n", WSAGetLastError());
+    }
+
+    // Close the connection
+    sprintf_s(buffer, BUFFER_SIZE, "a004 LOGOUT\r\n");
+    iResult = send(sock, buffer, strlen(buffer), 0);
+    if (iResult == SOCKET_ERROR) {
+        printf("send failed: %d\n", WSAGetLastError());
+    }
+
+    closesocket(sock);
+    WSACleanup();
+
+    return 0;
+}
