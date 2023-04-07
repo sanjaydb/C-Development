@@ -1,0 +1,248 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <windows.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+
+#define BUFFER_SIZE 1024
+#define DEFAULT_PORT "8080"
+#define DEFAULT_PROXY "localhost:8888"
+
+void print_error(const char *msg)
+{
+    fprintf(stderr, "%s: %s\n", msg, strerror(errno));
+}
+
+int main(int argc, char **argv)
+{
+    WSADATA wsaData;
+    int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (iResult != 0) {
+        printf("WSAStartup failed: %d\n", iResult);
+        return 1;
+    }
+
+    SSL_library_init();
+    SSL_load_error_strings();
+    OpenSSL_add_all_algorithms();
+
+    // Create a proxy server socket
+    struct addrinfo hints, *result, *rp;
+    ZeroMemory(&hints, sizeof(hints));
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+    hints.ai_flags = AI_PASSIVE;
+
+    iResult = getaddrinfo(NULL, DEFAULT_PORT, &hints, &result);
+    if (iResult != 0) {
+        printf("getaddrinfo failed: %d\n", iResult);
+        WSACleanup();
+        return 1;
+    }
+
+    SOCKET serverSock = INVALID_SOCKET;
+    for (rp = result; rp != NULL; rp = rp->ai_next) {
+        serverSock = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+        if (serverSock == INVALID_SOCKET) {
+            print_error("socket");
+            continue;
+        }
+
+        iResult = bind(serverSock, rp->ai_addr, (int)rp->ai_addrlen);
+        if (iResult == SOCKET_ERROR) {
+            print_error("bind");
+            closesocket(serverSock);
+            serverSock = INVALID_SOCKET;
+            continue;
+        }
+
+        break;
+    }
+
+    if (serverSock == INVALID_SOCKET) {
+        printf("Failed to create server socket.\n");
+        WSACleanup();
+        return 1;
+    }
+
+    freeaddrinfo(result);
+
+    iResult = listen(serverSock, SOMAXCONN);
+    if (iResult == SOCKET_ERROR) {
+        print_error("listen");
+        closesocket(serverSock);
+        WSACleanup();
+        return 1;
+    }
+
+    printf("Proxy server listening on port %s...\n", DEFAULT_PORT);
+
+    while (1) {
+        // Accept a client connection
+        struct sockaddr_in clientAddr;
+        int clientAddrLen = sizeof(clientAddr);
+        SOCKET clientSock = accept(serverSock, (struct sockaddr *)&clientAddr, &clientAddrLen);
+        if (clientSock == INVALID_SOCKET) {
+            print_error("accept");
+            continue;
+        }
+
+        printf("Accepted client connection: %s:%d\n", inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
+
+        // Read the HTTP request from the client
+        char buffer[BUFFER_SIZE];
+        iResult = recv(clientSock, buffer, BUFFER_SIZE, 0);
+        if (iResult == SOCKET_ERROR) {
+            print_error("recv");
+            closesocket(clientSock);
+            continue;
+        }
+
+        // Parse the request to determine the remote server address and port
+        char remoteHost[256], remotePort[6], *pHost, *pPort;
+        if (strncmp(buffer, "CONNECT ", 8) == 0) {
+            // HTTPS request
+            pHost = strtok(buffer + 8, ":");
+            pPort = strtok(NULL, " ");
+            strncpy(remoteHost, pHost, sizeof(remoteHost));
+            strncpy(remotePort, pPort, sizeof(remotePort));
+        } else {
+            // HTTP request
+            pHost = strstr(buffer, "Host: ");
+            if (pHost == NULL) {
+                closesocket(clientSock);
+                continue;
+            }
+
+            pHost += 6;
+            pPort = strchr(pHost, ':');
+            if (pPort == NULL) {
+                pPort = "80";
+            } else {
+                pPort += 1;
+            }
+
+            strncpy(remoteHost, pHost, min(pPort - pHost - 1, sizeof(remoteHost)));
+            strncpy(remotePort, pPort, sizeof(remotePort));
+        }
+
+        printf("Remote server: %s:%s\n", remoteHost, remotePort);
+
+        // Connect to the remote server
+        struct addrinfo *remoteResult;
+        ZeroMemory(&hints, sizeof(hints));
+        hints.ai_family = AF_UNSPEC;
+        hints.ai_socktype = SOCK_STREAM;
+        hints.ai_protocol = IPPROTO_TCP;
+
+        iResult = getaddrinfo(remoteHost, remotePort, &hints, &remoteResult);
+        if (iResult != 0) {
+            printf("getaddrinfo failed: %d\n", iResult);
+            closesocket(clientSock);
+            continue;
+        }
+
+        SOCKET serverSock = INVALID_SOCKET;
+        for (rp = remoteResult; rp != NULL; rp = rp->ai_next) {
+            serverSock = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+            if (serverSock == INVALID_SOCKET) {
+                print_error("socket");
+                continue;
+            }
+
+            iResult = connect(serverSock, rp->ai_addr, (int)rp->ai_addrlen);
+            if (iResult == SOCKET_ERROR) {
+                print_error("connect");
+                closesocket(serverSock);
+                serverSock = INVALID_SOCKET;
+                continue;
+            }
+
+            break;
+        }
+
+        freeaddrinfo(remoteResult);
+
+        if (serverSock == INVALID_SOCKET) {
+            printf("Failed to connect to remote server.\n");
+            closesocket(clientSock);
+            continue;
+        }
+
+        // Send the HTTP request to the remote server
+        iResult = send(serverSock, buffer, strlen(buffer), 0);
+        if (iResult == SOCKET_ERROR) {
+            print_error("send");
+            closesocket(clientSock);
+            closesocket(serverSock);
+            continue;
+        }
+
+        if (strncmp(buffer, "CONNECT ", 8) == 0) {
+            // HTTPS request, create an SSL context
+            SSL_CTX *sslContext = SSL_CTX_new(TLS_client_method());
+            if (sslContext == NULL) {
+                printf("Failed to create SSL context.\n");
+                closesocket(clientSock);
+                closesocket(serverSock);
+                continue;
+            }
+
+            // Create an SSL object and attach it to the socket
+            SSL *ssl = SSL_new(sslContext);
+            SSL_set_fd(ssl, serverSock);
+
+            // Perform the SSL handshake with the remote server
+            iResult = SSL_connect(ssl);
+            if (iResult != 1) {
+                printf("Failed to perform SSL handshake.\n");
+                ERR_print_errors_fp(stderr);
+                SSL_free(ssl);
+                SSL_CTX_free(sslContext);
+                closesocket(clientSock);
+                closesocket(serverSock);
+                continue;
+            }
+
+            // Send a success response to the client
+            char *successMsg = "HTTP/1.1 200 Connection Established\r\n\r\n";
+            iResult = send(clientSock
+            successMsg, strlen(successMsg), 0);
+            if (iResult == SOCKET_ERROR) {
+                print_error("send");
+                SSL_shutdown(ssl);
+                SSL_free(ssl);
+                SSL_CTX_free(sslContext);
+                closesocket(clientSock);
+                closesocket(serverSock);
+                continue;
+            }
+
+            // Start relaying encrypted data between the client and the server
+            relay_data_encrypted(clientSock, serverSock, ssl);
+
+            // Clean up the SSL objects and close the sockets
+            SSL_shutdown(ssl);
+            SSL_free(ssl);
+            SSL_CTX_free(sslContext);
+            closesocket(clientSock);
+            closesocket(serverSock);
+        } else {
+            // HTTP request, start relaying data between the client and the server
+            relay_data(clientSock, serverSock);
+
+            // Close the sockets
+            closesocket(clientSock);
+            closesocket(serverSock);
+        }
+    }
+
+    // Cleanup Winsock
+    WSACleanup();
+
+    return 0;
+}
