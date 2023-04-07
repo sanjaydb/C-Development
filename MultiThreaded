@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <windows.h>
+
+DWORD WINAPI myThreadFunction(LPVOID lpParam) {
+    int threadID = *((int*)lpParam);
+    printf("Thread %d is running\n", threadID);
+    Sleep(5000); // simulate some work
+    printf("Thread %d is exiting\n", threadID);
+    return 0;
+}
+
+int main() {
+    const int numThreads = 5;
+    HANDLE threadHandles[numThreads];
+    int threadIDs[numThreads];
+    for (int i = 0; i < numThreads; i++) {
+        threadIDs[i] = i;
+        threadHandles[i] = CreateThread(NULL, 0, myThreadFunction, &threadIDs[i], 0, NULL);
+        if (threadHandles[i] == NULL) {
+            printf("Error creating thread %d\n", i);
+            return 1;
+        }
+    }
+    WaitForMultipleObjects(numThreads, threadHandles, TRUE, INFINITE);
+    for (int i = 0; i < numThreads; i++) {
+        CloseHandle(threadHandles[i]);
+    }
+    return 0;
+}
