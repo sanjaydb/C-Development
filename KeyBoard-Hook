@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <windows.h>
+
+// Declare the hook procedure
+LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
+    PKBDLLHOOKSTRUCT pkbhs = (PKBDLLHOOKSTRUCT)lParam;
+    if (nCode == HC_ACTION) {
+        switch (pkbhs->vkCode) {
+            case VK_SPACE:
+                printf("Space bar pressed\n");
+                break;
+            case VK_RETURN:
+                printf("Enter key pressed\n");
+                break;
+            default:
+                break;
+        }
+    }
+    // Pass the hook information to the next hook procedure in the current hook chain
+    return CallNextHookEx(NULL, nCode, wParam, lParam);
+}
+
+int main() {
+    // Set the hook procedure
+    HHOOK hHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, NULL, 0);
+    if (hHook == NULL) {
+        printf("Failed to set the keyboard hook\n");
+        return 1;
+    }
+    // Wait for messages until the user presses a key
+    MSG msg;
+    while (GetMessage(&msg, NULL, 0, 0)) {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+    // Remove the hook
+    UnhookWindowsHookEx(hHook);
+    return 0;
+}
