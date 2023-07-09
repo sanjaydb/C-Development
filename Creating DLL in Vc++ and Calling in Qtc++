@@ -1,0 +1,119 @@
+1. Create a new Visual C++ DLL project in your development environment (e.g., Visual Studio).
+
+2. In the project, create a header file (e.g., MyStruct.h) to define the structure:
+
+MyStruct.h
+-----------
+#pragma once
+
+struct MyStruct {
+    char str[50];
+    int value;
+};
+
+
+3. Create a source file (e.g., MyDLL.cpp) and implement the function that returns the structure:
+
+MyDLL.cpp
+---------
+#include "MyStruct.h"
+
+#ifdef MYDLL_EXPORTS
+#define MYDLL_API __declspec(dllexport)
+#else
+#define MYDLL_API __declspec(dllimport)
+#endif
+
+extern "C" {
+    MYDLL_API MyStruct GetMyStruct();
+}
+
+MYDLL_API MyStruct GetMyStruct() {
+    MyStruct result;
+    strcpy_s(result.str, "Hello from DLL");
+    result.value = 42;
+    return result;
+}
+
+
+4. Build the project to generate the DLL file.
+
+5. Now, in the program that will use the DLL, include the header file and use the exported function:
+
+CallingDLL.cpp <- VC++ Example 
+-------------------------------
+#include <iostream>
+#include "MyStruct.h"
+
+typedef MyStruct (*GetMyStructFn)();
+
+int main() {
+    HINSTANCE hDll = LoadLibrary("MyDLL.dll");
+    if (hDll != nullptr) {
+        GetMyStructFn getMyStructFn = reinterpret_cast<GetMyStructFn>(GetProcAddress(hDll, "GetMyStruct"));
+        if (getMyStructFn != nullptr) {
+            MyStruct myStruct = getMyStructFn();
+            std::cout << "String: " << myStruct.str << std::endl;
+            std::cout << "Value: " << myStruct.value << std::endl;
+        }
+        FreeLibrary(hDll);
+    }
+    return 0;
+}
+
+6. Build and run the program. It will load the DLL dynamically, retrieve the function address using GetProcAddress, and call the function 
+to get the structure. Finally, it will print the values of the structure members.
+Make sure to adjust the project settings and build configurations according to your development environment
+
+
+To call a DLL in Qt C++
+------------------------
+
+1. Make sure you have the DLL file generated from the previous steps.
+
+2. In your Qt project, include the necessary headers and define the structure you expect to receive from the DLL:
+
+#pragma once
+
+struct MyStruct {
+    char str[50];
+    int value;
+};
+
+
+3. In your Qt project, use the QLibrary class to load the DLL, retrieve the function, and call it to get the structure:
+
+Qtc++ calling Program 
+----------------------
+#include <QCoreApplication>
+#include <QLibrary>
+#include <QDebug>
+
+typedef MyStruct (*GetMyStructFn)();
+
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
+
+    QLibrary myDll("MyDLL.dll");
+    if (myDll.load()) {
+        GetMyStructFn getMyStructFn = reinterpret_cast<GetMyStructFn>(myDll.resolve("GetMyStruct"));
+        if (getMyStructFn != nullptr) {
+            MyStruct myStruct = getMyStructFn();
+            qDebug() << "String:" << myStruct.str;
+            qDebug() << "Value:" << myStruct.value;
+        }
+        myDll.unload();
+    }
+
+    return a.exec();
+}
+
+
+3. Build and run the Qt project. The QLibrary class is used to load the DLL dynamically, retrieve the function address using resolve, 
+and call the function to get the structure. The structure members are then printed using qDebug().
+Make sure to adjust the code and paths based on your specific project setup and the location of the DLL file.
+
+4. Remember to include the necessary headers and add the DLL file to your Qt project by either placing it in the same 
+directory as your executable or adding it to your project file (.pro) using the LIBS directive.
+
