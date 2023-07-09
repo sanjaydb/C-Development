@@ -1,0 +1,54 @@
+To convert an IP address to a hostname using the ping command, you can make use of the "-a" option in the Windows command prompt. 
+This option resolves the IP address to a hostname in the ping response
+
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <cstdlib>
+#include <stdexcept>
+
+std::string convertIPToHostname(const std::string& ipAddress)
+{
+    std::stringstream ss;
+    ss << "ping -a " << ipAddress;
+
+    // Open a pipe to the command prompt
+    FILE* pipe = _popen(ss.str().c_str(), "r");
+    if (!pipe)
+    {
+        throw std::runtime_error("Failed to open pipe");
+    }
+
+    // Read the output of the ping command
+    const int bufferSize = 128;
+    char buffer[bufferSize];
+    std::string hostname;
+
+    while (fgets(buffer, bufferSize, pipe) != nullptr)
+    {
+        std::string line(buffer);
+        size_t startIndex = line.find("Pinging ");
+        size_t endIndex = line.find(" with");
+        if (startIndex != std::string::npos && endIndex != std::string::npos)
+        {
+            // Extract the hostname from the ping response
+            hostname = line.substr(startIndex + 8, endIndex - startIndex - 9);
+            break;
+        }
+    }
+
+    // Close the pipe
+    _pclose(pipe);
+
+    return hostname;
+}
+
+int main()
+{
+    std::string ipAddress = "192.168.1.1";
+    std::string hostname = convertIPToHostname(ipAddress);
+
+    std::cout << "Hostname: " << hostname << std::endl;
+
+    return 0;
+}
