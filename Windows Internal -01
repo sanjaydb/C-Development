@@ -1,47 +1,36 @@
-Threads
+Summary of Thread-related Concepts:
+-----------------------------------
+* A thread is an entity within a process that Windows schedules for execution. It is essential for the program of a process to run.
+* Components of a thread include CPU registers representing the processor state, 
+          two stacks (kernel mode and user mode), 
+          thread-local storage (TLS), and 
+          a unique identifier called a thread ID.
+* Threads may have their own security context or token, which is useful for multithreaded server applications that impersonate client security contexts.
+* Switching execution from one thread to another involves the kernel scheduler and can be costly. 
+          Windows employs fibers and user-mode scheduling (UMS) to reduce this cost.
+* Fibers allow an application to schedule its own threads of execution. They are implemented in user mode and are often referred to as lightweight threads. 
+          Fibers can be created and selected manually through fiber-specific functions.
+* While fibers provide control over scheduling, they have limitations such as issues with sharing thread local storage (TLS) and poor performance for I/O-bound tasks. 
+          They are also limited to cooperative multi-tasking and cannot run concurrently on multiple processors.
+* User-mode scheduling (UMS) threads, available only on 64-bit versions of Windows, offer advantages similar to fibers while overcoming some of their limitations. 
+          UMS threads have their own kernel thread state, are visible to the kernel, and 
+          can issue blocking system calls, 
+          share resources, 
+          and follow a pre-emptible model.
+* Threads within a process share the process's virtual address space and other resources, but each thread has its own execution context.
+* Each process has a security context stored in an access token. 
+          Threads can obtain their own access token, allowing them to impersonate the security context of another process without affecting other threads.
+* The memory manager uses virtual address descriptors (VADs) to keep track of the virtual addresses used by a process.
 
 
-A thread is an entity within a process that Windows schedules for execution. Without it, the process’s program can’t run. A thread includes the following essential components:
-
-■ The contents of a set of CPU registers representing the state of the processor
-
-■ Two stacks — one for the thread to use while executing in kernel mode and one for executing in user mode
-
-■ A private storage area called thread-local storage ( TLS ) for use by subsystems, run-time libraries, and DLLs
-
-■ A unique identifier called a thread ID (part of an internal structure called a client ID; process IDs and thread IDs are generated out of the same namespace, so they never overlap)
-
-In addition, threads sometimes have their own security context, or token, which is often used by multithreaded server applications that impersonate the security context of the clients that they serve.
-
-The volatile registers, stacks, and private storage area are called the thread’s context. Because this information is different for each machine architecture that Windows runs on, this structure, by necessity, is architecture-specific. The Windows GetThreadContext function provides access to this architecturespecific information (called the CONTEXT block).
-
-Because switching execution from one thread to another involves the kernel scheduler, it can be an expensive operation, especially if two threads are often switching between each other. Windows implements two mechanisms to reduce this cost: fibers and user-mode scheduling ( UMS ).
-
-Note
-
-The threads of a 32-bit application running on a 64-bit version of Windows will contain both 32-bit and 64-bit contexts, which Wow64 (Windows on Windows) will use to switch the application from running in 32-bit to 64-bit mode when required. These threads will have two user stacks and two CONTEXT blocks, and the usual Windows API functions will return the 64-bit context instead. The Wow64GetThreadContext function, however, will return the 32-bit context. See Chapter 8 in Part 2 for more information on Wow64.
-
-Fibers
-
-Fibers allow an application to schedule its own threads of execution rather than rely on the priority-based scheduling mechanism built into Windows. Fibers are often called lightweight threads. In terms of scheduling, they’re invisible to the kernel because they’re implemented in user mode in Kernel32.dll. To use fibers, you first make a call to the Windows ConvertThreadToFiber function. This function converts the thread to a running fiber. Afterward, the newly converted fiber can create additional fibers via the CreateFiber function. (Each fiber can have its own set of fibers.) Unlike a thread, however, a fiber doesn’t begin execution until it’s manually selected through a call to the SwitchToFiber function. The new fiber runs until it exits or until it calls SwitchToFiber, again selecting another fiber to run. For more information, see the Windows SDK documentation on fiber functions.
-
-
-Using fibers is usually not a good idea. This is because they are invisible to the kernel. They also have issues such as sharing thread local storage (TLS) because several fibers can be running on the same thread. Although fiber local storage (FLS) exists, this does not solve all sharing issues, and I/O-bound fibers will perform poorly regardless. Additionally, fibers cannot run concurrently on more than one processor, and are limited to cooperative multi-tasking only. In most scenarios, it’s best to let the Windows kernel handle scheduling by using the appropriate threads for the task at hand.
-
-
-User-mode scheduling threads
-
-User-mode scheduling (UMS) threads, which are available only on 64-bit versions of Windows, provide the same basic advantages as fibers — and only a few of the disadvantages. UMS threads have their own kernel thread state and are therefore visible to the kernel, which allows multiple UMS threads to issue blocking system calls and share and contend on resources. Or, when two or more UMS threads need to perform work in user mode, they can periodically switch execution contexts (by yielding from one thread to another) in user mode rather than involving the scheduler. From the kernel’s perspective, the same kernel thread is still running and nothing has changed. When a UMS thread performs an operation that requires entering the kernel (such as a system call), it switches to its dedicated kernel-mode thread (called a directed context switch ). While concurrent UMS threads still cannot run on multiple processors, they do follow a pre-emptible model that’s not solely cooperative.
-
-Although threads have their own execution context, every thread within a process shares the process’s virtual address space (in addition to the rest of the resources belonging to the process), meaning that all the threads in a process have full read-write access to the process virtual address space. Threads cannot accidentally reference the address space of another process, however, unless the other process makes available part of its private address space as a shared memory section (called a file mapping object in the Windows API) or unless one process has the right to open another process to use cross-process memory functions, such as ReadProcessMemory and WriteProcessMemory (which a process that’s running with the same user account, and not inside of an AppContainer or other type of sandbox, can get by default unless the target process has certain protections).
-
-In addition to a private address space and one or more threads, each process
-
-
-has a security context and a list of open handles to kernel objects such as files, shared memory sections, or one of the synchronization objects such as mutexes, events, or semaphores, as illustrated in Figure 1-2.
-
-Each process’s security context is stored in an object called an access token. The process access token contains the security identification and credentials for the process. By default, threads don’t have their own access token, but they can obtain one, thus allowing individual threads to impersonate the security context of another process — including processes on a remote Windows system — without affecting other threads in the process. (See Chapter 7 for more details on process and thread security.)
-
-The virtual address descriptors ( VADs ) are data structures that the memory manager uses to keep track of the virtual addresses the process is using. These data structures are described in more depth in Chapter 5.
+Important Points:
+-----------------
+* Threads are essential for program execution within a process.
+* Threads consist of CPU registers, stacks, thread-local storage (TLS), and a unique identifier.
+* Fibers provide lightweight thread-like functionality but have limitations and are best used in specific scenarios.
+* UMS threads offer advantages similar to fibers but are visible to the kernel and can issue blocking system calls.
+* Threads share a process's virtual address space and have their own execution context.
+* Access tokens contain security context information for processes and can be obtained by threads to impersonate other processes.
+* The memory manager uses virtual address descriptors (VADs) to track virtual addresses within a process.
 
 
