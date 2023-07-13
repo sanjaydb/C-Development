@@ -1,5 +1,6 @@
 Threads
 
+
 A thread is an entity within a process that Windows schedules for execution. Without it, the process’s program can’t run. A thread includes the following essential components:
 
 ■ The contents of a set of CPU registers representing the state of the processor
