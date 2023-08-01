@@ -21,6 +21,8 @@ int main()
 
 
 
+
+
 Example - 02 
 ------------
 
@@ -48,6 +50,64 @@ int main() {
 
     // Call performOperation and pass callbackFunction as the callback
     performOperation(num, callbackFunction);
+
+    return 0;
+}
+
+
+
+
+
+
+Example - 03
+------------
+#include <stdio.h>
+#include <stdlib.h>
+
+// Callback function type definition for comparison
+typedef int (*CompareFunction)(const void*, const void*);
+
+// Generic sorting function with callback
+void sortArray(void* arr, size_t numElements, size_t elementSize, CompareFunction compare) {
+    qsort(arr, numElements, elementSize, compare);
+}
+
+// Callback function to compare integers (ascending order)
+int compareIntegers(const void* a, const void* b) {
+    int numA = *(const int*)a;
+    int numB = *(const int*)b;
+    return (numA - numB);
+}
+
+// Callback function to compare strings (in alphabetical order)
+int compareStrings(const void* a, const void* b) {
+    return strcmp(*(const char**)a, *(const char**)b);
+}
+
+int main() {
+    int intArr[] = {5, 2, 8, 1, 9, 3};
+    char* strArr[] = {"apple", "orange", "banana", "grape"};
+
+    size_t numIntegers = sizeof(intArr) / sizeof(int);
+    size_t numStrings = sizeof(strArr) / sizeof(char*);
+
+    // Sort the integer array
+    sortArray(intArr, numIntegers, sizeof(int), compareIntegers);
+
+    printf("Sorted Integer Array: ");
+    for (size_t i = 0; i < numIntegers; i++) {
+        printf("%d ", intArr[i]);
+    }
+    printf("\n");
+
+    // Sort the string array
+    sortArray(strArr, numStrings, sizeof(char*), compareStrings);
+
+    printf("Sorted String Array: ");
+    for (size_t i = 0; i < numStrings; i++) {
+        printf("%s ", strArr[i]);
+    }
+    printf("\n");
 
     return 0;
 }
