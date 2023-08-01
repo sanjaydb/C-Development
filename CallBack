@@ -1,3 +1,5 @@
+Example - 01
+------------
 #include<stdio.h>
   
 void san()
@@ -15,4 +17,37 @@ int main()
     void (*ptr)() = &san;
     funCall(ptr);
    return 0;
+}
+
+
+
+Example - 02 
+------------
+
+#include <stdio.h>
+
+// Callback function type definition
+typedef void (*CallbackFunction)(int);
+
+// Function that takes a callback function as an argument
+void performOperation(int value, CallbackFunction callback) {
+    printf("Performing some operation with value %d...\n", value);
+    // Do some processing...
+
+    // Call the callback function
+    callback(value);
+}
+
+// Callback function to be called from performOperation
+void callbackFunction(int value) {
+    printf("Callback function called with value %d\n", value);
+}
+
+int main() {
+    int num = 42;
+
+    // Call performOperation and pass callbackFunction as the callback
+    performOperation(num, callbackFunction);
+
+    return 0;
 }
