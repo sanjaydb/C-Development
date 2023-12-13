@@ -6,7 +6,7 @@
 void main() {
     int sock;
     struct sockaddr_in serv_addr;
-
+//  --> 
     // Create socket
     sock = socket(AF_INET, SOCK_STREAM, 0);
 
