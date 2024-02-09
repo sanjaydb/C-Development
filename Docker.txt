@@ -1,0 +1,78 @@
+Sure, here are some essential Docker commands for managing containers on Ubuntu:
+
+1. **docker pull \<image>**: Pulls a Docker image from a registry like Docker Hub.
+   
+   Example: `docker pull ubuntu`
+
+2. **docker run \<options> \<image>**: Runs a Docker container based on a specified image.
+   
+   Example: `docker run -it ubuntu`
+
+3. **docker ps**: Lists all running containers.
+   
+   Example: `docker ps`
+
+4. **docker ps -a**: Lists all containers, including those that have exited.
+   
+   Example: `docker ps -a`
+
+5. **docker start \<container>**: Starts a stopped container.
+   
+   Example: `docker start my_container`
+
+6. **docker stop \<container>**: Stops a running container.
+   
+   Example: `docker stop my_container`
+
+7. **docker restart \<container>**: Restarts a running container.
+   
+   Example: `docker restart my_container`
+
+8. **docker rm \<container>**: Removes a container.
+   
+   Example: `docker rm my_container`
+
+9. **docker images**: Lists all Docker images on the system.
+   
+   Example: `docker images`
+
+10. **docker rmi \<image>**: Removes a Docker image from the system.
+   
+    Example: `docker rmi ubuntu`
+
+11. **docker exec \<options> \<container> \<command>**: Executes a command inside a running container.
+    
+    Example: `docker exec -it my_container bash`
+
+12. **docker logs \<container>**: Displays the logs of a container.
+    
+    Example: `docker logs my_container`
+
+13. **docker inspect \<container>**: Shows detailed information about a container.
+    
+    Example: `docker inspect my_container`
+
+14. **docker cp \<src_path> \<container>:\<dest_path>**: Copies files or folders between the host and a container.
+    
+    Example: `docker cp ./local_file.txt my_container:/container_file.txt`
+
+These commands should help you get started with managing Docker containers on Ubuntu. Remember to replace `<image>` and `<container>` with the appropriate image or container names.
+
+
+docker --version
+docker pull ubuntu
+docker run -it ubuntu
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container_id_or_name>
+docker ps -a
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container_id_or_name>
+nmap -6 -sP <IPv6_address>
+wget http://[IPv6_address]
+docker images
+docker run -it ubuntu:latest
+docker stop ed257983f0a8
+docker rm ed257983f0a8
+docker rmi -f ubuntu
+
+
+
+
