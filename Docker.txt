@@ -1,3 +1,42 @@
+Sure, let's break down the code step by step:
+
+1. The script starts with the shebang line `#!/usr/bin/bash`, which indicates that this script is to be executed using the bash shell.
+
+2. Next, some variables are defined:
+   - `MYENV` is set to "eur".
+   - `DOMAIN` is set to "com".
+   - `TLSVER` is set to '1.2', specifying that only TLS versions 1.2 or 1.3 are to be used.
+   - `TLS` is created by concatenating `--tlsv${TLSVER}` and `--tls-max ${TLSVER}`, which specifies the TLS version to be used.
+
+3. Various URLs are constructed using the defined variables:
+   - `AUTH_URL` is constructed by substituting `${MYENV}` and `${DOMAIN}` into a template string.
+   - `API_URL` is constructed similarly, but without the "auth.device" part of the domain.
+   - `UM_URL` is constructed by appending "/user-management/v2" to `API_URL`.
+   - `OAUTH_URL` and `OAUTH_URL_T` are similarly constructed URLs related to OAuth2 authentication.
+
+4. The script then prints out the constructed URLs.
+
+5. It prompts the user to input a username and a password using `read` commands.
+
+6. It removes some files (`log/mscred.json`, `log/mstok.json`, and `log/trace*.log`) to clean up before making a new request. This is likely for debugging or to ensure a fresh start.
+
+7. It executes a `curl` command to make an HTTP request. Let's break down the `curl` command:
+   - `-o log/mstok.json` specifies the output file for the response.
+   - `--key conf/client.key --cert conf/client.pem --cacert conf/bundle.pem` specifies client-side certificates and CA certificate.
+   - `--trace log/trace2.log` enables tracing of the request/response to a file.
+   - `$TLS` includes the TLS version specifications defined earlier.
+   - `-X POST` specifies the HTTP request method as POST.
+   - `--header 'Content-Type: application/x-www-form-urlencoded'` sets the request header.
+   - `--data-urlencode "username=${username}"` and subsequent `--data-urlencode` options encode form data for the request body.
+   - The request data includes the username, password, grant type, client ID, and scope.
+   - Finally, the request is made to `$OAUTH_URL_T`.
+
+8. It echoes the error code of the `curl` command.
+
+This script seems to be making an OAuth2 authentication request to a specified endpoint using curl. It's designed to run in a Unix-like environment (hence the shebang line at the beginning).
+
+
+
 Sure, here are some essential Docker commands for managing containers on Ubuntu:
 
 1. **docker pull \<image>**: Pulls a Docker image from a registry like Docker Hub.
@@ -72,6 +111,13 @@ docker run -it ubuntu:latest
 docker stop ed257983f0a8
 docker rm ed257983f0a8
 docker rmi -f ubuntu
+docker system prune
+
+docker volume ls
+docker volume rm <volume_name>
+
+
+
 
 
 
