@@ -117,6 +117,27 @@ docker volume ls
 docker volume rm <volume_name>
 
 
+install Kubernets on docker
+---------------------------
+
+Final 
+-------
+
+docker pull debian
+docker run -it debian
+
+apt update
+
+apt install curl gpg sudo 
+apt install -y apt-transport-https ca-certificates curl software-properties-common
+
+add-apt-repository "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /" |  tee /etc/apt/sources.list.d/kubernetes.list
+
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+apt-get update
+apt-get install kubeadm kubelet kubectl
 
 
 
