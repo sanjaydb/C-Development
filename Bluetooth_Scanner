@@ -2,49 +2,58 @@ btscan.c
 --------
 #include <windows.h>
 #include <stdio.h>
-#include <bthsdpdef.h>
+#include <stdlib.h>
 #include <bluetoothapis.h>
-#include <bthdef.h>
 
 #pragma comment(lib, "Bthprops.lib")
 
-int main()
-{
-    BLUETOOTH_DEVICE_INFO deviceInfo;
-    deviceInfo.dwSize = sizeof(BLUETOOTH_DEVICE_INFO);
-    deviceInfo.Address.ullLong = 0xF7C1476F1033; // Replace with your device's Bluetooth address
+void queryDevices() {
+    BLUETOOTH_FIND_RADIO_PARAMS radioParams = { sizeof(BLUETOOTH_FIND_RADIO_PARAMS) };
+    HANDLE radioHandle;
+    HBLUETOOTH_RADIO_FIND radioFind = BluetoothFindFirstRadio(&radioParams, &radioHandle);
 
-    BLUETOOTH_DEVICE_SEARCH_PARAMS searchParams = {
-        sizeof(BLUETOOTH_DEVICE_SEARCH_PARAMS),
-        1,    // return authenticated devices
-        0,    // return remembered devices
-        1,    // return unknown devices
-        1,    // return connected devices
-        1,    // issue inquiry
-        8,    // timeout multipler (x1.28 seconds)
-        NULL  // radio handle
-    };
+    if (radioFind != NULL) {
+        do {
+            BLUETOOTH_RADIO_INFO radioInfo = { sizeof(BLUETOOTH_RADIO_INFO), 0 };
+            if (BluetoothGetRadioInfo(radioHandle, &radioInfo) == ERROR_SUCCESS) {
+                printf("Radio found: %ws\n", radioInfo.szName);
+            }
 
-    HANDLE hDeviceFind = BluetoothFindFirstDevice(&searchParams, &deviceInfo);
-    if (hDeviceFind == NULL) {
-        printf("Failed to find any devices.\n");
-        return 1;
+            BLUETOOTH_DEVICE_SEARCH_PARAMS searchParams = {
+                sizeof(BLUETOOTH_DEVICE_SEARCH_PARAMS),
+                1,
+                0,
+                1,
+                1,
+                1,
+                15,
+                radioHandle
+            };
+            BLUETOOTH_DEVICE_INFO deviceInfo = { sizeof(BLUETOOTH_DEVICE_INFO) };
+            HBLUETOOTH_DEVICE_FIND deviceFind = BluetoothFindFirstDevice(&searchParams, &deviceInfo);
+
+            if (deviceFind != NULL) {
+                do {
+                    printf("Found device: %ws\n", deviceInfo.szName);
+                    printf("Address: %02X:%02X:%02X:%02X:%02X:%02X\n",
+                        deviceInfo.Address.rgBytes[5],
+                        deviceInfo.Address.rgBytes[4],
+                        deviceInfo.Address.rgBytes[3],
+                        deviceInfo.Address.rgBytes[2],
+                        deviceInfo.Address.rgBytes[1],
+                        deviceInfo.Address.rgBytes[0]);
+                } while (BluetoothFindNextDevice(deviceFind, &deviceInfo));
+                BluetoothFindDeviceClose(deviceFind);
+            }
+            CloseHandle(radioHandle);
+        } while (BluetoothFindNextRadio(radioFind, &radioHandle));
+        BluetoothFindRadioClose(radioFind);
+    } else {
+        printf("No Bluetooth radios found.\n");
     }
-
-    do {
-        printf("Trying to pair with %S\n", deviceInfo.szName);
-
-        BLUETOOTH_AUTHENTICATION_CALLBACK_PARAMS params;
-        HRESULT hr = BluetoothAuthenticateDeviceEx(NULL, NULL, &deviceInfo, NULL, MITMProtectionRequired);
-        if (SUCCEEDED(hr)) {
-            printf("Successfully paired with %S\n", deviceInfo.szName);
-        } else {
-            printf("Failed to pair, error %d\n", GetLastError());
-        }
-
-    } while (BluetoothFindNextDevice(hDeviceFind, &deviceInfo));
-
-    BluetoothFindDeviceClose(hDeviceFind);
-    return 0;
 }
 
+int main() {
+    queryDevices();
+    return 0;
+}
