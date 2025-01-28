@@ -20,7 +20,7 @@ Sure, let's break down the code step by step:
 
 6. It removes some files (`log/mscred.json`, `log/mstok.json`, and `log/trace*.log`) to clean up before making a new request. This is likely for debugging or to ensure a fresh start.
 
-7. It executes a `curl` command to make an HTTP request. Let's break down the `curl` command:
+7. It executes a `curl` command to make an H!TTP request. Let's break down the `curl` command:
    - `-o log/mstok.json` specifies the output file for the response.
    - `--key conf/client.key --cert conf/client.pem --cacert conf/bundle.pem` specifies client-side certificates and CA certificate.
    - `--trace log/trace2.log` enables tracing of the request/response to a file.
