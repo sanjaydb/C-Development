@@ -15,6 +15,49 @@ dumpbin /relocations p1.exe
 dumpbin /rawdata:bytes /section:.data p1.exe
 dumpbin /symbols p1.exe -> COFF image should be compiled with /debug 
 dumpbin /tls p1.exe -> IMAGE_TLS_DIRECTORY if threads are implemented.
+dumpbin /all p1.exe -> Displays all available information about the executable.
+dumpbin /clridescription p1.exe -> Displays CLR metadata for .NET assemblies.
+dumpbin /clrheader p1.exe -> Displays the CLR header for .NET assemblies.
+dumpbin /loadconfig p1.exe -> Displays the load configuration directory (security and initialization info).
+dumpbin /section:.text /rawdata p1.exe -> Displays raw data for the .text section.
+dumpbin /summary p1.exe -> Provides a summary of sections and their sizes.
+dumpbin /exports a.exe -> Lists all exported functions and symbols.
+dumpbin /imports a.exe -> Lists all imported functions and symbols.
+dumpbin /source p1.obj -> Displays source line information (requires debugging information).
+dumpbin /typeinfo p1.exe -> Displays type information from the executable (e.g., COM objects).
+dumpbin /fixups p1.exe -> Shows relocation fix-ups in the image.
+dumpbin /xref:symbol_name p1.exe -> Displays cross-references for a specific symbol.
+dumpbin /hex /disasm a.exe -> Disassembles and displays raw machine instructions in hexadecimal.
+dumpbin /hidden p1.exe -> Displays hidden symbols (requires specific debug information).
+dumpbin /coff p1.obj -> Displays COFF (Common Object File Format) information.
+dumpbin /mapinfo p1.exe -> Displays mapping information for the file.
+dumpbin /linkermember p1.lib -> Lists public symbols in a library file.
+dumpbin /dependents p1.dll -> Displays dependencies for a DLL.
+dumpbin /output:path\to\output.txt p1.exe -> Redirects output to a file for analysis.
+dumpbin /debug a.exe -> Displays debug directory information.
+dumpbin /machine a.exe -> Identifies the target machine (e.g., x86, x64, ARM).
+
+dumpbin /all p1.exe -> Displays all available information about the executable.
+dumpbin /clridescription p1.exe -> Displays CLR metadata for .NET assemblies.
+dumpbin /clrheader p1.exe -> Displays the CLR header for .NET assemblies.
+dumpbin /loadconfig p1.exe -> Displays the load configuration directory (security and initialization info).
+dumpbin /section:.text /rawdata p1.exe -> Displays raw data for the .text section.
+dumpbin /summary p1.exe -> Provides a summary of sections and their sizes.
+dumpbin /exports a.exe -> Lists all exported functions and symbols.
+dumpbin /imports a.exe -> Lists all imported functions and symbols.
+dumpbin /source p1.obj -> Displays source line information (requires debugging information).
+dumpbin /typeinfo p1.exe -> Displays type information from the executable (e.g., COM objects).
+dumpbin /fixups p1.exe -> Shows relocation fix-ups in the image.
+dumpbin /xref:symbol_name p1.exe -> Displays cross-references for a specific symbol.
+dumpbin /hex /disasm a.exe -> Disassembles and displays raw machine instructions in hexadecimal.
+dumpbin /hidden p1.exe -> Displays hidden symbols (requires specific debug information).
+dumpbin /coff p1.obj -> Displays COFF (Common Object File Format) information.
+dumpbin /mapinfo p1.exe -> Displays mapping information for the file.
+dumpbin /linkermember p1.lib -> Lists public symbols in a library file.
+dumpbin /dependents p1.dll -> Displays dependencies for a DLL.
+dumpbin /output:path\to\output.txt p1.exe -> Redirects output to a file for analysis.
+dumpbin /debug a.exe -> Displays debug directory information.
+dumpbin /machine a.exe -> Identifies the target machine (e.g., x86, x64, ARM).
 
 
 cl
