@@ -1,0 +1,254 @@
+ use axum::{
+    extract::{Host, Path, ConnectInfo},
+    response::IntoResponse,
+    routing::get,
+    Router,
+};
+
+use std::net::{SocketAddr, TcpStream};
+use std::time::Duration;
+use tokio::process::Command;
+
+use trust_dns_resolver::TokioAsyncResolver;
+
+use whois_rust::{WhoIs,WhoIsLookupOptions};
+
+#[tokio::main]
+async fn main() {
+
+    let app = Router::new()
+        .route("/", get(root))
+        .route("/:target", get(tool_handler));
+
+    let addr = "0.0.0.0:8080";
+
+    println!("pcitools server running on {}", addr);
+
+    let listener = tokio::net::TcpListener::bind(addr)
+        .await
+        .unwrap();
+
+    axum::serve(
+        listener,
+        app.into_make_service_with_connect_info::<SocketAddr>(),
+    )
+    .await
+    .unwrap();
+}
+
+
+
+
+async fn root(
+
+    Host(host): Host,
+
+    ConnectInfo(addr): ConnectInfo<SocketAddr>
+
+) -> impl IntoResponse {
+
+    if host.starts_with("ip.") {
+
+        return format!("{}\n", addr.ip());
+
+    }
+
+    "pcitools network api\n".to_string()
+
+}
+
+
+
+async fn tool_handler(
+
+    Host(host): Host,
+
+    Path(target): Path<String>,
+
+) -> impl IntoResponse {
+
+
+    let sub = host.split('.').next().unwrap_or("");
+
+    match sub {
+
+        "dns" => dns_lookup(&target).await,
+
+        "mx" => mx_lookup(&target).await,
+
+        "ping" => ping(&target).await,
+
+        "trace" => traceroute(&target).await,
+
+        "whois" => whois_lookup(&target).await,
+
+        "portscan" => portscan(&target).await,
+
+        _ => "Unknown tool\n".to_string()
+
+    }
+
+}
+
+
+
+async fn dns_lookup(target:&str)->String{
+
+    let resolver = TokioAsyncResolver::tokio_from_system_conf().unwrap();
+
+    match resolver.lookup_ip(target).await {
+
+        Ok(res)=>{
+
+            let mut out=String::new();
+
+            for ip in res{
+
+                out.push_str(&format!("{}\n",ip));
+
+            }
+
+            out
+
+        }
+
+        Err(e)=>format!("DNS error {}\n",e)
+
+    }
+
+}
+
+
+
+async fn mx_lookup(target:&str)->String{
+
+    let resolver = TokioAsyncResolver::tokio_from_system_conf().unwrap();
+
+    match resolver.mx_lookup(target).await{
+
+        Ok(res)=>{
+
+            let mut out=String::new();
+
+            for mx in res{
+
+                out.push_str(&format!("{}\n",mx.exchange()));
+
+            }
+
+            out
+
+        }
+
+        Err(e)=>format!("MX error {}\n",e)
+
+    }
+
+}
+
+
+
+async fn ping(target:&str)->String{
+
+    let out = Command::new("ping")
+
+        .args(["-c","4",target])
+
+        .output()
+
+        .await;
+
+    match out{
+
+        Ok(v)=>String::from_utf8_lossy(&v.stdout).to_string(),
+
+        Err(e)=>format!("Ping error {}\n",e)
+
+    }
+
+}
+
+
+
+async fn traceroute(target:&str)->String{
+
+    let out = Command::new("traceroute")
+
+        .arg(target)
+
+        .output()
+
+        .await;
+
+    match out{
+
+        Ok(v)=>String::from_utf8_lossy(&v.stdout).to_string(),
+
+        Err(e)=>format!("Traceroute error {}\n",e)
+
+    }
+
+}
+
+
+
+async fn whois_lookup(target:&str)->String{
+
+    let whois = WhoIs::from_path("/etc/whois.conf")
+
+        .unwrap_or(WhoIs::from_string("").unwrap());
+
+
+    let opts = WhoIsLookupOptions::from_string(target.to_string()).unwrap();
+
+    match whois.lookup(opts){
+
+        Ok(res)=>res,
+
+        Err(e)=>format!("Whois error {}\n",e)
+
+    }
+
+}
+
+
+
+async fn portscan(target:&str)->String{
+
+    let ports = vec![
+
+        21,22,25,53,80,110,139,143,443,445,3306,3389,8080
+
+    ];
+
+    let mut out=String::new();
+
+    for p in ports{
+
+        let addr=format!("{}:{}",target,p);
+
+        if TcpStream::connect_timeout(
+
+            &addr.parse().unwrap(),
+
+            Duration::from_secs(1)
+
+        ).is_ok(){
+
+            out.push_str(&format!("{} open\n",p));
+
+        }
+
+    }
+
+    if out.is_empty(){
+
+        "no common ports open\n".to_string()
+
+    }else{
+
+        out
+
+    }
+
+}
